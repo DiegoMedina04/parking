@@ -1,0 +1,62 @@
+# ==========================================
+# GITHUB IGNORE RULES FOR MONOREPO/WORKSPACE
+# Applica para ambos: parkingApi y parkingWeb
+# ==========================================
+
+# Dependencias de Node
+node_modules/
+.npm
+jspm_packages/
+
+# Archivos de entorno y secretos
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.test
+.env.production
+
+# Compilación y Builds (Frontend y Backend)
+dist/
+build/
+out/
+dist-tsc/
+.next/
+
+# Logs y Debug
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage y Tests
+coverage
+*.lcov
+.nyc_output
+
+# Herramientas de Sistema Operativo y Editores (IDE)
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos temporales
+tmp/
+temp/
+*.tgz
+.node_repl_history
+
+# ==========================================
+# (Si parkingApi y parkingWeb tienen sus propios 
+# archivos generados, estaran cubiertos arriba)
