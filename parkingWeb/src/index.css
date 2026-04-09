@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3b82f6; /* Blue 500 */
+  --color-secondary: #1e40af; /* Blue 800 */
+  --color-background: #f3f4f6; /* Gray 100 */
+}
+
+@layer base {
+  body {
+    @apply bg-background text-gray-800 font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+}
