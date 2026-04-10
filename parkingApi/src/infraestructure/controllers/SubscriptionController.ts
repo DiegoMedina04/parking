@@ -15,4 +15,18 @@ export class SubscriptionController {
     const savedSubscription = await this.subscriptionService.save(subscription);
     res.status(201).json(savedSubscription);
   }
+
+  async update(req: Request, res: Response): Promise<void> {
+    const id = req.params.id as string;
+    const subscription: Subscription = req.body;
+    subscription.id = id;
+    const updatedSubscription = await this.subscriptionService.update(subscription);
+    res.status(200).json(updatedSubscription);
+  }
+
+  async delete(req: Request, res: Response): Promise<void> {
+    const id = req.params.id as string;
+    await this.subscriptionService.delete(id);
+    res.status(204).send();
+  }
 }

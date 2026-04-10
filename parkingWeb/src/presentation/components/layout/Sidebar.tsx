@@ -10,7 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  UserCircle
+  UserCircle,
+  CheckCircle2
 } from 'lucide-react';
 import { useAuthStore } from '../../../application/store/authStore';
 import { ROLES } from '../../../domain/constants/roles';
@@ -61,6 +62,12 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       label: 'Planes',
       path: '/planes',
       icon: <Database size={22} />,
+      roles: [ROLES.ADMIN]
+    },
+    {
+      label: 'Suscripciones',
+      path: '/suscripciones',
+      icon: <CheckCircle2 size={22} />,
       roles: [ROLES.ADMIN]
     },
     {

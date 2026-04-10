@@ -40,6 +40,8 @@ import { CreateRoleUseCaseImpl } from '../../application/usecases/role/CreateRol
 import { RetrieveRoleUseCaseImpl } from '../../application/usecases/role/RetrieveRoleUseCaseImpl';
 import { CreateSubscriptionUseCaseImpl } from '../../application/usecases/subscription/CreateSubscriptionUseCaseImpl';
 import { RetrieveSubscriptionUseCaseImpl } from '../../application/usecases/subscription/RetrieveSubscriptionUseCaseImpl';
+import { UpdateSubscriptionUseCaseImpl } from '../../application/usecases/subscription/UpdateSubscriptionUseCaseImpl';
+import { DeleteSubscriptionUseCaseImpl } from '../../application/usecases/subscription/DeleteSubscriptionUseCaseImpl';
 import { CreateClientUseCaseImpl } from '../../application/usecases/client/CreateClientUseCaseImpl';
 import { RetrieveClientUseCaseImpl } from '../../application/usecases/client/RetrieveClientUseCaseImpl';
 import { CreateVehicleUseCaseImpl } from '../../application/usecases/vehicle/CreateVehicleUseCaseImpl';
@@ -144,7 +146,9 @@ export class DependencyInjection {
     const repo = new TypeOrmSubscriptionRepositoryAdapter(AppDataSource.getRepository(SubscriptionEntity));
     const createUC = new CreateSubscriptionUseCaseImpl(repo);
     const retrieveUC = new RetrieveSubscriptionUseCaseImpl(repo);
-    const service = new SubscriptionService(retrieveUC, createUC);
+    const updateUC = new UpdateSubscriptionUseCaseImpl(repo);
+    const deleteUC = new DeleteSubscriptionUseCaseImpl(repo);
+    const service = new SubscriptionService(retrieveUC, createUC, updateUC, deleteUC);
     return new SubscriptionController(service);
   }
 
