@@ -7,6 +7,7 @@ import { PlaceholderPage } from './presentation/pages/PlaceholderPages';
 import { PlansPage } from './presentation/pages/admin/PlansPage';
 import { SubscriptionsPage } from './presentation/pages/admin/SubscriptionsPage';
 import { RolesPage } from './presentation/pages/admin/RolesPage';
+import { UsersPage } from './presentation/pages/admin/UsersPage';
 import { MainLayout } from './presentation/components/layout/MainLayout';
 import { useAuthStore } from './application/store/authStore';
 import { ROLES } from './domain/constants/roles';
@@ -49,7 +50,7 @@ function App() {
             <Route path="/planes" element={<PlansPage />} />
             <Route path="/suscripciones" element={<SubscriptionsPage />} />
             <Route path="/roles" element={<RolesPage />} />
-            <Route path="/usuarios" element={<PlaceholderPage title="Gestión de Usuarios" />} />
+            <Route path="/usuarios" element={<UsersPage />} />
             <Route path="/parqueaderos" element={<PlaceholderPage title="Gestión de Parqueaderos" />} />
             <Route path="/mensualidades" element={<PlaceholderPage title="Gestión de Mensualidades" />} />
             <Route path="/reportes" element={<PlaceholderPage title="Reportes y Métricas" />} />

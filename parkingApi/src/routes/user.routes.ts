@@ -8,6 +8,8 @@ export const createUserRouter = (userController: UserController) => {
 
   router.get('/', (req, res) => userController.findAll(req, res));
   router.post('/', (req, res) => userController.save(req, res));
+  router.put('/:id', (req, res) => userController.update(req, res));
+  router.delete('/:id', (req, res) => userController.delete(req, res));
 
   return router;
 };

@@ -30,6 +30,8 @@ import { TypeOrmMensualidadRepositoryAdapter } from '../repositories/TypeOrmMens
 // Use Case Implementations
 import { CreateUserUseCaseImpl } from '../../application/usecases/user/CreateUserUseCaseImpl';
 import { RetrieveUserUseCaseImpl } from '../../application/usecases/user/RetrieveUserUseCaseImpl';
+import { UpdateUserUseCaseImpl } from '../../application/usecases/user/UpdateUserUseCaseImpl';
+import { DeleteUserUseCaseImpl } from '../../application/usecases/user/DeleteUserUseCaseImpl';
 import { CreateParkingUseCaseImpl } from '../../application/usecases/parking/CreateParkingUseCaseImpl';
 import { RetrieveParkingUseCaseImpl } from '../../application/usecases/parking/RetrieveParkingUseCaseImpl';
 import { CreatePlanUseCaseImpl } from '../../application/usecases/plan/CreatePlanUseCaseImpl';
@@ -103,7 +105,10 @@ export class DependencyInjection {
     const passwordHasher = new BcryptPasswordHasherAdapter();
     const createUC = new CreateUserUseCaseImpl(repo, roleRepo, passwordHasher);
     const retrieveUC = new RetrieveUserUseCaseImpl(repo);
-    const service = new UserService(retrieveUC, createUC);
+    const updateUC = new UpdateUserUseCaseImpl(repo, roleRepo, passwordHasher);
+    const deleteUC = new DeleteUserUseCaseImpl(repo);
+
+    const service = new UserService(retrieveUC, createUC, updateUC, deleteUC);
     return new UserController(service);
   }
 
