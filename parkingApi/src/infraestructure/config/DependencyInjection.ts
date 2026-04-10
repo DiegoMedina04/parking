@@ -38,6 +38,8 @@ import { UpdatePlanUseCaseImpl } from '../../application/usecases/plan/UpdatePla
 import { DeletePlanUseCaseImpl } from '../../application/usecases/plan/DeletePlanUseCaseImpl';
 import { CreateRoleUseCaseImpl } from '../../application/usecases/role/CreateRoleUseCaseImpl';
 import { RetrieveRoleUseCaseImpl } from '../../application/usecases/role/RetrieveRoleUseCaseImpl';
+import { UpdateRoleUseCaseImpl } from '../../application/usecases/role/UpdateRoleUseCaseImpl';
+import { DeleteRoleUseCaseImpl } from '../../application/usecases/role/DeleteRoleUseCaseImpl';
 import { CreateSubscriptionUseCaseImpl } from '../../application/usecases/subscription/CreateSubscriptionUseCaseImpl';
 import { RetrieveSubscriptionUseCaseImpl } from '../../application/usecases/subscription/RetrieveSubscriptionUseCaseImpl';
 import { UpdateSubscriptionUseCaseImpl } from '../../application/usecases/subscription/UpdateSubscriptionUseCaseImpl';
@@ -138,8 +140,10 @@ export class DependencyInjection {
     const repo = new TypeOrmRoleRepositoryAdapter(AppDataSource.getRepository(RoleEntity));
     const createUC = new CreateRoleUseCaseImpl(repo);
     const retrieveUC = new RetrieveRoleUseCaseImpl(repo);
-    const service = new RoleService(retrieveUC, createUC);
-    return new RoleController(createUC, retrieveUC);
+    const updateUC = new UpdateRoleUseCaseImpl(repo);
+    const deleteUC = new DeleteRoleUseCaseImpl(repo);
+    const service = new RoleService(retrieveUC, createUC, updateUC, deleteUC);
+    return new RoleController(service);
   }
 
   static getSubscriptionController(): SubscriptionController {
