@@ -7,7 +7,7 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
     private readonly expiresIn: string;
 
     constructor() {
-        this.secret = process.env.JWT_SECRET || 'super_secret_key';
+        this.secret = process.env.JWT_SECRET || 'secret_key_placeholder';
         this.expiresIn = process.env.JWT_EXPIRES_IN || '24h';
     }
 
@@ -18,6 +18,7 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
             role: user.role?.name
         };
         const options: SignOptions = { expiresIn: this.expiresIn as any };
+        
         return jwt.sign(payload, this.secret, options);
     }
 }

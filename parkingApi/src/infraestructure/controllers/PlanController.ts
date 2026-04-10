@@ -15,4 +15,18 @@ export class PlanController {
     const savedPlan = await this.planService.save(plan);
     res.status(201).json(savedPlan);
   }
+
+  async update(req: Request, res: Response): Promise<void> {
+    const id = req.params.id as string;
+    const plan: Plan = req.body;
+    plan.id = id;
+    const updatedPlan = await this.planService.update(plan);
+    res.status(200).json(updatedPlan);
+  }
+
+  async delete(req: Request, res: Response): Promise<void> {
+    const id = req.params.id as string;
+    await this.planService.delete(id);
+    res.status(204).send();
+  }
 }

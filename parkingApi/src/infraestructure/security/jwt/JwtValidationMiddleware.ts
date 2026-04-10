@@ -14,9 +14,12 @@ export const jwtValidationMiddleware = (req: Request, res: Response, next: NextF
 
   try {
     const payload = jwt.verify(token, TokenJwtConfig.SECRET_KEY);
+    
     (req as any).user = payload;
     next();
   } catch (error) {
+    console.log({error});
+    
     res.status(403).json({
       error: error instanceof Error ? error.message : 'Unknown error',
       message: 'el token no es valido!',

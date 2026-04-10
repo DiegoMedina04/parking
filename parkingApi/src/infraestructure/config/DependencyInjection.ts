@@ -34,6 +34,8 @@ import { CreateParkingUseCaseImpl } from '../../application/usecases/parking/Cre
 import { RetrieveParkingUseCaseImpl } from '../../application/usecases/parking/RetrieveParkingUseCaseImpl';
 import { CreatePlanUseCaseImpl } from '../../application/usecases/plan/CreatePlanUseCaseImpl';
 import { RetrievePlanUseCaseImpl } from '../../application/usecases/plan/RetrievePlanUseCaseImpl';
+import { UpdatePlanUseCaseImpl } from '../../application/usecases/plan/UpdatePlanUseCaseImpl';
+import { DeletePlanUseCaseImpl } from '../../application/usecases/plan/DeletePlanUseCaseImpl';
 import { CreateRoleUseCaseImpl } from '../../application/usecases/role/CreateRoleUseCaseImpl';
 import { RetrieveRoleUseCaseImpl } from '../../application/usecases/role/RetrieveRoleUseCaseImpl';
 import { CreateSubscriptionUseCaseImpl } from '../../application/usecases/subscription/CreateSubscriptionUseCaseImpl';
@@ -124,7 +126,9 @@ export class DependencyInjection {
     const repo = new TypeOrmPlanRepositoryAdapter(AppDataSource.getRepository(PlanEntity));
     const createUC = new CreatePlanUseCaseImpl(repo);
     const retrieveUC = new RetrievePlanUseCaseImpl(repo);
-    const service = new PlanService(retrieveUC, createUC);
+    const updateUC = new UpdatePlanUseCaseImpl(repo);
+    const deleteUC = new DeletePlanUseCaseImpl(repo);
+    const service = new PlanService(retrieveUC, createUC, updateUC, deleteUC);
     return new PlanController(service);
   }
 

@@ -1,12 +1,9 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import apiRoutes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './infraestructure/config/SwaggerConfig';
 import { globalExceptionHandler } from './infraestructure/middleware/GlobalExceptionHandler';
-
-dotenv.config();
 
 const app: Application = express();
 
