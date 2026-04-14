@@ -8,6 +8,7 @@ import { PlansPage } from './presentation/pages/admin/PlansPage';
 import { SubscriptionsPage } from './presentation/pages/admin/SubscriptionsPage';
 import { RolesPage } from './presentation/pages/admin/RolesPage';
 import { UsersPage } from './presentation/pages/admin/UsersPage';
+import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
 import { MainLayout } from './presentation/components/layout/MainLayout';
 import { useAuthStore } from './application/store/authStore';
 import { ROLES } from './domain/constants/roles';
@@ -44,6 +45,7 @@ function App() {
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={[ROLES.OPERATOR]} />}>
+              <Route path="/mis-parqueaderos" element={<MyParkingsPage />} />
               <Route path="/operacion" element={<PlaceholderPage title="Control de Tickets" />} />
               <Route path="/clientes" element={<PlaceholderPage title="Gestión de Clientes" />} />
             </Route>

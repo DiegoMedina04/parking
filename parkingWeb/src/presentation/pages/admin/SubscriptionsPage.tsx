@@ -49,11 +49,11 @@ export const SubscriptionsPage = () => {
       const [subsRes, plansRes, parkingsRes] = await Promise.all([
         subscriptionService.getSubscriptions(),
         planService.getPlanes(),
-        httpClient.get<any[]>('/parqueadero') // Direct call to avoid missing service
+        httpClient.get<any>('/parqueadero') // Direct call to avoid missing service
       ]);
       setSubscriptions(subsRes);
       setPlans(plansRes);
-      setParkings(parkingsRes.data);
+      setParkings(parkingsRes.data.data);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {

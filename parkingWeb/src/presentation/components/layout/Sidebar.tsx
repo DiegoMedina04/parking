@@ -78,10 +78,10 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       roles: [ROLES.ADMIN]
     },
     {
-      label: 'Parqueaderos',
-      path: '/parqueaderos',
+      label: 'Mis Parqueaderos',
+      path: '/mis-parqueaderos',
       icon: <ParkingCircle size={22} />,
-      roles: [ROLES.ADMIN]
+      roles: [ROLES.OPERATOR]
     },
     {
       label: 'Reportes',

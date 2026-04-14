@@ -5,7 +5,10 @@ import { ParkingRepositoryPort } from '../../../domain/ports/out/ParkingReposito
 export class RetrieveParkingUseCaseImpl implements RetrieveParkingUseCase {
   constructor(private readonly parkingRepositoryPort: ParkingRepositoryPort) {}
 
-  async getParkings(): Promise<Parking[]> {
+  async getParkings(userId?: string): Promise<Parking[]> {
+    if (userId) {
+      return this.parkingRepositoryPort.findByUserId(userId);
+    }
     return this.parkingRepositoryPort.findAll();
   }
 }

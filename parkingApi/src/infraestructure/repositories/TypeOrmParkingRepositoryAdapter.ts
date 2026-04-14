@@ -19,6 +19,14 @@ export class TypeOrmParkingRepositoryAdapter implements ParkingRepositoryPort {
     return entity ? entity.toDomainModel() : null;
   }
 
+  async findByUserId(userId: string): Promise<Parking[]> {
+    const entities = await this.parkingRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user', 'subscription']
+    });
+    return entities.map((entity) => entity.toDomainModel());
+  }
+
   async save(parking: Parking): Promise<Parking> {
     const entity = ParkingEntity.fromDomainModel(parking);
     const savedEntity = await this.parkingRepository.save(entity);

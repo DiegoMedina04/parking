@@ -36,6 +36,8 @@ import { UpdateUserUseCaseImpl } from '../../application/usecases/user/UpdateUse
 import { DeleteUserUseCaseImpl } from '../../application/usecases/user/DeleteUserUseCaseImpl';
 import { CreateParkingUseCaseImpl } from '../../application/usecases/parking/CreateParkingUseCaseImpl';
 import { RetrieveParkingUseCaseImpl } from '../../application/usecases/parking/RetrieveParkingUseCaseImpl';
+import { UpdateParkingUseCaseImpl } from '../../application/usecases/parking/UpdateParkingUseCaseImpl';
+import { DeleteParkingUseCaseImpl } from '../../application/usecases/parking/DeleteParkingUseCaseImpl';
 import { CreatePlanUseCaseImpl } from '../../application/usecases/plan/CreatePlanUseCaseImpl';
 import { RetrievePlanUseCaseImpl } from '../../application/usecases/plan/RetrievePlanUseCaseImpl';
 import { UpdatePlanUseCaseImpl } from '../../application/usecases/plan/UpdatePlanUseCaseImpl';
@@ -118,7 +120,9 @@ export class DependencyInjection {
     const userRepo = new TypeOrmUserRepositoryAdapter(AppDataSource.getRepository(UserEntity));
     const createUC = new CreateParkingUseCaseImpl(repo, userRepo);
     const retrieveUC = new RetrieveParkingUseCaseImpl(repo);
-    const service = new ParkingService(retrieveUC, createUC);
+    const updateUC = new UpdateParkingUseCaseImpl(repo);
+    const deleteUC = new DeleteParkingUseCaseImpl(repo);
+    const service = new ParkingService(retrieveUC, createUC, updateUC, deleteUC);
     return new ParkingController(service);
   }
 
