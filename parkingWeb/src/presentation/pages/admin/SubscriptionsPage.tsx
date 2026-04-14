@@ -49,7 +49,7 @@ export const SubscriptionsPage = () => {
       const [subsRes, plansRes, parkingsRes] = await Promise.all([
         subscriptionService.getSubscriptions(),
         planService.getPlanes(),
-        httpClient.get<any[]>('/parking') // Direct call to avoid missing service
+        httpClient.get<any[]>('/parqueadero') // Direct call to avoid missing service
       ]);
       setSubscriptions(subsRes);
       setPlans(plansRes);

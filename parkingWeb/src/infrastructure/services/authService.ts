@@ -17,4 +17,9 @@ export const authService = {
     });
     return response.data;
   },
+
+  signup: async (userData: any): Promise<any> => {
+    const response = await httpClient.post('/auth/signup', userData);
+    return response.data;
+  },
 };

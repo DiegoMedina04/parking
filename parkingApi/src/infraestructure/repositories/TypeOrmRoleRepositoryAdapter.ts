@@ -16,6 +16,11 @@ export class TypeOrmRoleRepositoryAdapter implements RoleRepositoryPort {
     return entity ? entity.toDomainModel() : null;
   }
 
+  async findByName(name: string): Promise<Role | null> {
+    const entity = await this.roleRepository.findOne({ where: { name } });
+    return entity ? entity.toDomainModel() : null;
+  }
+
   async save(role: Role): Promise<Role> {
     const entity = RoleEntity.fromDomainModel(role);
     const savedEntity = await this.roleRepository.save(entity);

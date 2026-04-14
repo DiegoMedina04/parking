@@ -25,4 +25,19 @@ export class AuthController {
       res.status(500).json({ status: 'error', message: error.message });
     }
   }
+
+  async signup(req: Request, res: Response): Promise<void> {
+    try {
+      const user = req.body;
+      const savedUser = await this.authService.signup(user);
+      
+      // Eliminar password del response
+      const { password, ...safeUser } = savedUser as any;
+      
+      res.status(201).json({ status: 'success', data: safeUser });
+    } catch (error: any) {
+      const statusCode = error.name === 'NotFoundError' ? 404 : 400;
+      res.status(statusCode).json({ status: 'error', message: error.message });
+    }
+  }
 }

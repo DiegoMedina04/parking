@@ -29,6 +29,8 @@ import { TypeOrmMensualidadRepositoryAdapter } from '../repositories/TypeOrmMens
 
 // Use Case Implementations
 import { CreateUserUseCaseImpl } from '../../application/usecases/user/CreateUserUseCaseImpl';
+import { LoginUseCaseImpl } from '../../application/usecases/auth/LoginUseCaseImpl';
+import { SignupUseCaseImpl } from '../../application/usecases/auth/SignupUseCaseImpl';
 import { RetrieveUserUseCaseImpl } from '../../application/usecases/user/RetrieveUserUseCaseImpl';
 import { UpdateUserUseCaseImpl } from '../../application/usecases/user/UpdateUserUseCaseImpl';
 import { DeleteUserUseCaseImpl } from '../../application/usecases/user/DeleteUserUseCaseImpl';
@@ -80,7 +82,6 @@ import { AuthService } from '../../application/services/AuthService';
 // Security / Adapters
 import { BcryptPasswordHasherAdapter } from '../security/BcryptPasswordHasherAdapter';
 import { JwtGeneratorAdapter } from '../security/jwt/JwtGeneratorAdapter';
-import { LoginUseCaseImpl } from '../../application/usecases/auth/LoginUseCaseImpl';
 
 // Controllers
 import { UserController } from '../controllers/UserController';
@@ -162,17 +163,20 @@ export class DependencyInjection {
   }
 
   static getAuthController(): AuthController {
-    // Repositorio
+    // Repositorios
     const userRepo = new TypeOrmUserRepositoryAdapter(AppDataSource.getRepository(UserEntity));
+    const roleRepo = new TypeOrmRoleRepositoryAdapter(AppDataSource.getRepository(RoleEntity));
+    
     // Providers
     const passwordHasher = new BcryptPasswordHasherAdapter();
     const jwtGenerator = new JwtGeneratorAdapter();
     
     // Casos de uso
     const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator);
+    const signupUC = new SignupUseCaseImpl(userRepo, roleRepo, passwordHasher);
     
     // Servicio
-    const authService = new AuthService(loginUC);
+    const authService = new AuthService(loginUC, signupUC);
     
     return new AuthController(authService);
   }

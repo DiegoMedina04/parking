@@ -21,9 +21,10 @@ interface UserFormModalProps {
   onSave: (data: UserDTO) => Promise<void>;
   selectedUser: User | null;
   roles: Role[];
+  isSignup?: boolean;
 }
 
-export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles }: UserFormModalProps) => {
+export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles, isSignup }: UserFormModalProps) => {
   const [formData, setFormData] = useState<UserDTO>({
     name: '',
     document: '',
@@ -56,12 +57,12 @@ export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles }: 
         document: '',
         email: '',
         password: '',
-        role: { id: '' }
+        role: { id: isSignup ? 'SIGNUP_PENDING' : '' } // Dummy ID for validation if needed, backend handles actual role
       });
       setChangePassword(true);
     }
     setConfirmPassword('');
-  }, [selectedUser, isOpen]);
+  }, [selectedUser, isOpen, isSignup]);
 
   // Handle click outside for custom select
   useEffect(() => {
@@ -81,7 +82,7 @@ export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles }: 
     formData.name && 
     formData.document && 
     formData.email && 
-    formData.role.id &&
+    (isSignup || formData.role.id) &&
     (!changePassword || (isPasswordValid && passwordsMatch));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,21 +99,22 @@ export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles }: 
   const selectedRoleName = roles.find(r => r.id === formData.role.id)?.name || 'Seleccionar Rol...';
 
   return (
-    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-in fade-in duration-300 text-left">
       <div className="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-200">
         
         {/* Header Compacto */}
         <div className="p-8 pb-4 flex justify-between items-center border-b border-slate-50">
           <div>
             <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-              {selectedUser ? 'Editar Perfil' : 'Nuevo Usuario'}
+              {isSignup ? 'Crea tu Cuenta' : selectedUser ? 'Editar Perfil' : 'Nuevo Usuario'}
             </h2>
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-1 flex items-center gap-1.5">
               <Shield size={12} className="text-blue-500" />
-              Accesos ParkingPro
+              {isSignup ? 'Empieza a gestionar tu sede ahora' : 'Accesos ParkingPro'}
             </p>
           </div>
           <button 
+            type="button"
             onClick={onClose} 
             className="p-3 bg-slate-50 text-slate-300 hover:text-slate-600 rounded-2xl transition-all"
           >
@@ -164,45 +166,47 @@ export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles }: 
             </div>
           </div>
 
-          {/* Selector de Rol Personalizado */}
-          <div className="space-y-1.5" ref={selectRef}>
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asignar Cargo/Rol</label>
-            <div className="relative">
-              <div 
-                onClick={() => setIsSelectOpen(!isSelectOpen)}
-                className={`
-                  w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 flex justify-between items-center cursor-pointer transition-all
-                  ${isSelectOpen ? 'ring-2 ring-blue-100 border-blue-200' : 'hover:bg-slate-100/50'}
-                `}
-              >
-                <div className="flex items-center gap-3">
-                  <Shield size={16} className={formData.role.id ? 'text-blue-500' : 'text-slate-300'} />
-                  <span className={`text-sm font-bold ${formData.role.id ? 'text-slate-700' : 'text-slate-400'}`}>
-                    {selectedRoleName}
-                  </span>
+          {/* Selector de Rol Personalizado (Oculto en Signup) */}
+          {!isSignup && (
+            <div className="space-y-1.5" ref={selectRef}>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asignar Cargo/Rol</label>
+              <div className="relative">
+                <div 
+                  onClick={() => setIsSelectOpen(!isSelectOpen)}
+                  className={`
+                    w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 flex justify-between items-center cursor-pointer transition-all
+                    ${isSelectOpen ? 'ring-2 ring-blue-100 border-blue-200' : 'hover:bg-slate-100/50'}
+                  `}
+                >
+                  <div className="flex items-center gap-3">
+                    <Shield size={16} className={formData.role.id ? 'text-blue-500' : 'text-slate-300'} />
+                    <span className={`text-sm font-bold ${formData.role.id ? 'text-slate-700' : 'text-slate-400'}`}>
+                      {selectedRoleName}
+                    </span>
+                  </div>
+                  <ChevronDown size={18} className={`text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />
                 </div>
-                <ChevronDown size={18} className={`text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />
+                
+                {isSelectOpen && (
+                  <div className="absolute top-[110%] left-0 w-full bg-white border border-slate-100 rounded-2xl shadow-xl z-20 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {roles.map(r => (
+                      <div 
+                        key={r.id}
+                        onClick={() => {
+                          setFormData({...formData, role: { id: r.id }});
+                          setIsSelectOpen(false);
+                        }}
+                        className="px-5 py-3 hover:bg-blue-50 hover:text-blue-600 text-sm font-bold text-slate-600 cursor-pointer flex items-center justify-between group"
+                      >
+                        {r.name}
+                        {formData.role.id === r.id && <CheckCircle2 size={16} className="text-blue-500" />}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {isSelectOpen && (
-                <div className="absolute top-[110%] left-0 w-full bg-white border border-slate-100 rounded-2xl shadow-xl z-10 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {roles.map(r => (
-                    <div 
-                      key={r.id}
-                      onClick={() => {
-                        setFormData({...formData, role: { id: r.id }});
-                        setIsSelectOpen(false);
-                      }}
-                      className="px-5 py-3 hover:bg-blue-50 hover:text-blue-600 text-sm font-bold text-slate-600 cursor-pointer flex items-center justify-between group"
-                    >
-                      {r.name}
-                      {formData.role.id === r.id && <CheckCircle2 size={16} className="text-blue-500" />}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
+          )}
 
           {/* Sección de Contraseña */}
           <div className="space-y-4 pt-2 border-t border-slate-50">
