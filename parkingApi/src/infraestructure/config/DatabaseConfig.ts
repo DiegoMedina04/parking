@@ -14,6 +14,7 @@ import { TicketEntity } from '../entities/TicketEntity';
 import { TicketPaymentEntity } from '../entities/TicketPaymentEntity';
 import { PlanMensualidadEntity } from '../entities/PlanMensualidadEntity';
 import { MensualidadEntity } from '../entities/MensualidadEntity';
+import { FeeEntity } from '../entities/FeeEntity';
 
 dotenv.config();
 
@@ -38,7 +39,8 @@ export const AppDataSource = new DataSource({
     TicketEntity,
     TicketPaymentEntity,
     PlanMensualidadEntity,
-    MensualidadEntity
+    MensualidadEntity,
+    FeeEntity
   ],
   subscribers: [],
   migrations: [],

@@ -105,8 +105,34 @@ import { TicketController } from '../controllers/TicketController';
 import { TicketPaymentController } from '../controllers/TicketPaymentController';
 import { PlanMensualidadController } from '../controllers/PlanMensualidadController';
 import { MensualidadController } from '../controllers/MensualidadController';
+import { FeeController } from '../controllers/FeeController';
+
+// Entities
+import { FeeEntity } from '../entities/FeeEntity';
+
+// Repository Adapters
+import { TypeOrmFeeRepositoryAdapter } from '../repositories/TypeOrmFeeRepositoryAdapter';
+
+// Use Case Implementations
+import { CreateFeeUseCaseImpl } from '../../application/usecases/fee/CreateFeeUseCaseImpl';
+import { RetrieveFeeUseCaseImpl } from '../../application/usecases/fee/RetrieveFeeUseCaseImpl';
+import { UpdateFeeUseCaseImpl } from '../../application/usecases/fee/UpdateFeeUseCaseImpl';
+import { DeleteFeeUseCaseImpl } from '../../application/usecases/fee/DeleteFeeUseCaseImpl';
+
+// Services
+import { FeeService } from '../../application/services/FeeService';
 
 export class DependencyInjection {
+
+  static getFeeController(): FeeController {
+    const repo = new TypeOrmFeeRepositoryAdapter(AppDataSource.getRepository(FeeEntity));
+    const createUC = new CreateFeeUseCaseImpl(repo);
+    const retrieveUC = new RetrieveFeeUseCaseImpl(repo);
+    const updateUC = new UpdateFeeUseCaseImpl(repo);
+    const deleteUC = new DeleteFeeUseCaseImpl(repo);
+    const service = new FeeService(createUC, retrieveUC, updateUC, deleteUC);
+    return new FeeController(service);
+  }
 
   static getUserController(): UserController {
     const repo = new TypeOrmUserRepositoryAdapter(AppDataSource.getRepository(UserEntity));

@@ -15,7 +15,8 @@ import {
   CarFront,
   Car,
   MapPin,
-  RefreshCcw
+  RefreshCcw,
+  DollarSign
 } from 'lucide-react';
 import { useAuthStore } from '../../../application/store/authStore';
 import { useAppStore } from '../../../application/store/appStore';
@@ -68,6 +69,12 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       label: 'Tipos de Vehículo',
       path: '/tipos-vehiculos',
       icon: <CarFront size={22} />,
+      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+    },
+    {
+      label: 'Tarifas',
+      path: '/tarifas',
+      icon: <DollarSign size={22} />,
       roles: [ROLES.ADMIN, ROLES.OPERATOR]
     },
     {

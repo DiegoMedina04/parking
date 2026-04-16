@@ -16,6 +16,7 @@ import { createTicketRouter } from './ticket.routes';
 import { createTicketPaymentRouter } from './ticketPayment.routes';
 import { createPlanMensualidadRouter } from '../infraestructure/routes/planMensualidad.routes';
 import { createMensualidadRouter } from '../infraestructure/routes/mensualidad.routes';
+import { createFeeRouter } from './fee.routes';
 
 const router = Router();
 
@@ -46,5 +47,6 @@ router.use('/ticket', (req, res, next) => createTicketRouter(DependencyInjection
 router.use('/ticket-payment', (req, res, next) => createTicketPaymentRouter(DependencyInjection.getTicketPaymentController())(req, res, next));
 router.use('/plan_mensualidades', (req, res, next) => createPlanMensualidadRouter(DependencyInjection.getPlanMensualidadController())(req, res, next));
 router.use('/mensualidades', (req, res, next) => createMensualidadRouter(DependencyInjection.getMensualidadController())(req, res, next));
+router.use('/fee', (req, res, next) => createFeeRouter(DependencyInjection.getFeeController())(req, res, next));
 
 export default router;

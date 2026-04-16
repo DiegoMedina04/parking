@@ -8,6 +8,7 @@ import { PlansPage } from './presentation/pages/admin/PlansPage';
 import { SubscriptionsPage } from './presentation/pages/admin/SubscriptionsPage';
 import { RolesPage } from './presentation/pages/admin/RolesPage';
 import { UsersPage } from './presentation/pages/admin/UsersPage';
+import FeesPage from './presentation/pages/operator/FeesPage';
 import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
 import { ClientsPage } from './presentation/pages/operator/ClientsPage';
 import { VehiclesPage } from './presentation/pages/operator/VehiclesPage';
@@ -57,6 +58,7 @@ function App() {
 
             <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR]} />}>
               <Route path="/tipos-vehiculos" element={<VehicleTypesPage />} />
+              <Route path="/tarifas" element={<FeesPage />} />
             </Route>
 
             {/* Rutas Solo ADMIN */}

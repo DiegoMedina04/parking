@@ -10,6 +10,7 @@ export interface LoginResult {
         name: string;
         email: string;
         role?: string;
+        parqueadero_id?: string;
     };
 }
 
@@ -41,7 +42,8 @@ export class LoginUseCaseImpl {
                 id: user.id,
                 name: user.name,
                 email: user.email || '',
-                role: user.role?.name
+                role: user.role?.name,
+                parqueadero_id: user.parking && user.parking.length > 0 ? user.parking[0].id : undefined
             }
         };
     }

@@ -54,7 +54,7 @@ export class UserEntity {
       this.password,
       this.email,
       this.role?.toDomainModel(),
-      undefined // Avoid circular reference or load if needed
+      this.parking?.map(p => p.toDomainModel())
     );
   }
 }
