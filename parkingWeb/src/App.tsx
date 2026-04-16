@@ -10,6 +10,7 @@ import { RolesPage } from './presentation/pages/admin/RolesPage';
 import { UsersPage } from './presentation/pages/admin/UsersPage';
 import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
 import { ClientsPage } from './presentation/pages/operator/ClientsPage';
+import { VehiclesPage } from './presentation/pages/operator/VehiclesPage';
 import { VehicleTypesPage } from './presentation/pages/operator/VehicleTypesPage';
 import { MainLayout } from './presentation/components/layout/MainLayout';
 import { useAuthStore } from './application/store/authStore';
@@ -49,6 +50,7 @@ function App() {
             <Route element={<ProtectedRoute allowedRoles={[ROLES.OPERATOR]} />}>
               <Route path="/mis-parqueaderos" element={<MyParkingsPage />} />
               <Route path="/clientes" element={<ClientsPage />} />
+              <Route path="/vehiculos" element={<VehiclesPage />} />
               <Route path="/operacion" element={<PlaceholderPage title="Control de Tickets" />} />
             </Route>
 

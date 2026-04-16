@@ -20,7 +20,7 @@ export const VehicleTypeFormModal = ({ isOpen, onClose, onSave, selectedType }: 
 
   useEffect(() => {
     if (selectedType) {
-      setName(selectedType.name_vehicle);
+      setName(selectedType.name);
     } else {
       setName('');
     }
@@ -34,7 +34,7 @@ export const VehicleTypeFormModal = ({ isOpen, onClose, onSave, selectedType }: 
     try {
       await onSave({
         ...selectedType,
-        name_vehicle: name
+        name: name
       });
       onClose();
     } catch (error) {

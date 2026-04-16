@@ -10,12 +10,32 @@ export const httpClient = axios.create({
   },
 });
 
+import { useAppStore } from '../../application/store/appStore';
+
 // Interceptor para inyectar token automáticamente
 httpClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // Auto-inject parqueadero_id de contexto
+  const activeParkingId = useAppStore.getState().activeParkingId;
+  const method = config.method?.toLowerCase();
+
+  // No inyectar en rutas públicas/de autenticación o si no hay sede
+  if (activeParkingId && config.url && !config.url.includes('/auth')) {
+    if (method === 'get') {
+      config.params = { ...config.params, parqueadero_id: activeParkingId };
+    } else if (method === 'post' || method === 'put' || method === 'patch') {
+      if (config.data && typeof config.data === 'object' && !Array.isArray(config.data)) {
+        config.data = { ...config.data, parqueadero_id: activeParkingId };
+      } else if (!config.data) {
+        config.data = { parqueadero_id: activeParkingId };
+      }
+    }
+  }
+
   return config;
 });
 

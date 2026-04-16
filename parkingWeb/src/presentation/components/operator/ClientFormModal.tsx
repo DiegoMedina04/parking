@@ -21,7 +21,7 @@ interface ClientFormModalProps {
 export const ClientFormModal = ({ isOpen, onClose, onSave, selectedClient }: ClientFormModalProps) => {
   const [formData, setFormData] = useState<ClientDTO>({
     name: '',
-    cedula: '',
+    document: '',
     email: '',
     phone: ''
   });
@@ -33,7 +33,7 @@ export const ClientFormModal = ({ isOpen, onClose, onSave, selectedClient }: Cli
     } else {
       setFormData({
         name: '',
-        cedula: '',
+        document: '',
         email: '',
         phone: ''
       });
@@ -109,8 +109,8 @@ export const ClientFormModal = ({ isOpen, onClose, onSave, selectedClient }: Cli
                     pattern="[0-9]*"
                     placeholder="Solo números"
                     className="w-full bg-slate-50 border border-slate-100 rounded-[2rem] pl-16 pr-8 py-5 outline-none font-bold text-slate-700 focus:bg-white focus:border-blue-100 focus:shadow-md transition-all"
-                    value={formData.cedula}
-                    onChange={(e) => setFormData({...formData, cedula: e.target.value})}
+                    value={formData.document}
+                    onChange={(e) => setFormData({...formData, document: e.target.value})}
                     required
                   />
                 </div>

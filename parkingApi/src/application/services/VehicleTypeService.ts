@@ -12,8 +12,8 @@ export class VehicleTypeService implements RetrieveVehicleTypeUseCase, CreateVeh
     private readonly deleteVehicleTypeUseCase: DeleteVehicleTypeUseCase
   ) {}
 
-  async getVehicleTypes(): Promise<VehicleType[]> {
-    return this.retrieveVehicleTypeUseCase.getVehicleTypes();
+  async getVehicleTypes(parqueadero_id?: string): Promise<VehicleType[]> {
+    return this.retrieveVehicleTypeUseCase.getVehicleTypes(parqueadero_id);
   }
 
   async findById(id: string): Promise<VehicleType | null> {

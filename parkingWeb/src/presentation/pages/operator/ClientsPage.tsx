@@ -26,14 +26,14 @@ export const ClientsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<ClientDTO | null>(null);
 
-  const { activeParkingId, activeParkingName } = useAppStore();
+  const { activeParkingId } = useAppStore();
   const navigate = useNavigate();
 
   const fetchClients = async () => {
     if (!activeParkingId) return;
     try {
       setLoading(true);
-      const response = await clientService.getClients(activeParkingId);
+      const response = await clientService.getClients();
       setClients(response.data);
     } catch (error) {
       toast.error('Error al cargar clientes');
@@ -50,12 +50,11 @@ export const ClientsPage = () => {
 
   const handleSave = async (clientData: ClientDTO) => {
     try {
-      const payload = { ...clientData, parqueadero_id: activeParkingId! };
       if (selectedClient?.id) {
-        await clientService.updateClient(selectedClient.id, payload);
+        await clientService.updateClient(selectedClient.id, clientData);
         toast.success('Cliente actualizado correctamente');
       } else {
-        await clientService.saveClient(payload);
+        await clientService.saveClient(clientData);
         toast.success('Cliente registrado con éxito');
       }
       fetchClients();
@@ -79,7 +78,7 @@ export const ClientsPage = () => {
 
   const filteredClients = clients.filter(c => 
     c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.cedula.includes(searchTerm)
+    c.document.includes(searchTerm)
   );
 
   if (!activeParkingId) {
@@ -126,11 +125,6 @@ export const ClientsPage = () => {
           }
         />
 
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex items-center gap-3">
-          <Building2 className="text-blue-500" size={24} />
-          <p className="text-blue-800 font-bold">Viendo clientes de: <span className="font-black italic">{activeParkingName}</span></p>
-        </div>
-
         {/* Search Bar */}
         <div className="relative group">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={22} />
@@ -176,7 +170,7 @@ export const ClientsPage = () => {
                       <td className="px-10 py-8">
                         <div className="flex items-center gap-2 text-slate-500 font-bold">
                           <IdCard size={16} className="text-blue-500" />
-                          {client.cedula}
+                          {client.document}
                         </div>
                       </td>
                       <td className="px-10 py-8">

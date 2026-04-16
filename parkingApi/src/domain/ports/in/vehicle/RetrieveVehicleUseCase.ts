@@ -1,6 +1,6 @@
 import { Vehicle } from '../../../../domain/models/Vehicle';
 
 export interface RetrieveVehicleUseCase {
-    getVehicles(): Promise<Vehicle[]>;
+    getVehicles(parqueadero_id?: string): Promise<Vehicle[]>;
     findById(id: string): Promise<Vehicle | null>;
 }

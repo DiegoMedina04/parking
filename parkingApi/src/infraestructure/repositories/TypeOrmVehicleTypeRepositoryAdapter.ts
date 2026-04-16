@@ -6,8 +6,9 @@ import { VehicleTypeEntity } from '../entities/VehicleTypeEntity';
 export class TypeOrmVehicleTypeRepositoryAdapter implements VehicleTypeRepositoryPort {
   constructor(private readonly vehicleTypeRepository: Repository<VehicleTypeEntity>) {}
 
-  async findAll(): Promise<VehicleType[]> {
-    const entities = await this.vehicleTypeRepository.find();
+  async findAll(parqueadero_id?: string): Promise<VehicleType[]> {
+    const whereClause = parqueadero_id ? { parqueadero_id } : {};
+    const entities = await this.vehicleTypeRepository.find({ where: whereClause });
     return entities.map((entity) => entity.toDomainModel());
   }
 

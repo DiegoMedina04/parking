@@ -7,7 +7,8 @@ export class VehicleTypeController {
 
   async findAll(req: Request, res: Response): Promise<void> {
     try {
-      const vehicleTypes = await this.vehicleTypeService.getVehicleTypes();
+      const parqueadero_id = req.query.parqueadero_id as string | undefined;
+      const vehicleTypes = await this.vehicleTypeService.getVehicleTypes(parqueadero_id);
       res.status(200).json({ status: 'success', data: vehicleTypes });
     } catch (error: any) {
       res.status(500).json({ status: 'error', message: error.message });

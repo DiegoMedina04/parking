@@ -10,12 +10,15 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  UserCircle,
   CheckCircle2,
   Shield,
-  CarFront
+  CarFront,
+  Car,
+  MapPin,
+  RefreshCcw
 } from 'lucide-react';
 import { useAuthStore } from '../../../application/store/authStore';
+import { useAppStore } from '../../../application/store/appStore';
 import { ROLES } from '../../../domain/constants/roles';
 
 interface SidebarProps {
@@ -27,6 +30,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMobileMenuOpen }: SidebarProps) => {
   const { user, clearAuth } = useAuthStore();
+  const { activeParkingName, clearActiveParking } = useAppStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -51,31 +55,13 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
     {
       label: 'Clientes',
       path: '/clientes',
-      icon: <UserCircle size={22} />,
+      icon: <Users size={22} />,
       roles: [ROLES.OPERATOR]
     },
     {
-      label: 'Roles',
-      path: '/roles',
-      icon: <Shield size={22} />,
-      roles: [ROLES.ADMIN]
-    },
-    {
-      label: 'Usuarios',
-      path: '/usuarios',
-      icon: <Users size={22} />,
-      roles: [ROLES.ADMIN]
-    },
-    {
-      label: 'Planes',
-      path: '/planes',
-      icon: <Database size={22} />,
-      roles: [ROLES.ADMIN]
-    },
-    {
-      label: 'Clientes',
-      path: '/clientes',
-      icon: <Users size={22} />,
+      label: 'Vehículos',
+      path: '/vehiculos',
+      icon: <Car size={22} />,
       roles: [ROLES.OPERATOR]
     },
     {
@@ -85,16 +71,34 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       roles: [ROLES.ADMIN, ROLES.OPERATOR]
     },
     {
-      label: 'Suscripciones',
-      path: '/suscripciones',
-      icon: <CheckCircle2 size={22} />,
-      roles: [ROLES.ADMIN]
-    },
-    {
       label: 'Mis Parqueaderos',
       path: '/mis-parqueaderos',
       icon: <ParkingCircle size={22} />,
       roles: [ROLES.OPERATOR]
+    },
+    {
+      label: 'Usuarios',
+      path: '/usuarios',
+      icon: <Users size={22} />,
+      roles: [ROLES.ADMIN]
+    },
+    {
+      label: 'Roles',
+      path: '/roles',
+      icon: <Shield size={22} />,
+      roles: [ROLES.ADMIN]
+    },
+    {
+      label: 'Planes',
+      path: '/planes',
+      icon: <Database size={22} />,
+      roles: [ROLES.ADMIN]
+    },
+    {
+      label: 'Suscripciones',
+      path: '/suscripciones',
+      icon: <CheckCircle2 size={22} />,
+      roles: [ROLES.ADMIN]
     },
     {
       label: 'Reportes',
@@ -129,6 +133,30 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
           </span>
         )}
       </div>
+
+      {/* Sede Activa Selector Rapido */}
+      {user?.role === ROLES.OPERATOR && (
+        <div className={`px-4 mb-4 ${isCollapsed ? 'hidden' : 'block animate-in fade-in zoom-in-95 duration-500'}`}>
+          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3 shadow-sm group hover:border-blue-200 transition-colors">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin size={16} className="text-blue-500" />
+              <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Sede Activa</span>
+            </div>
+            <p className="font-bold text-slate-800 text-sm truncate mb-3">{activeParkingName || 'Ninguna'}</p>
+            <button 
+              onClick={() => {
+                clearActiveParking();
+                navigate('/dashboard');
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full py-2 bg-white hover:bg-blue-50 text-blue-600 border border-slate-200 hover:border-blue-200 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2"
+            >
+              <RefreshCcw size={14} />
+              Cambiar Sede
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Nav Content */}
       <nav className="flex-1 px-3 space-y-1.5 overflow-y-auto overflow-x-hidden pt-4">

@@ -1,4 +1,6 @@
 import { useAuthStore } from '../../../application/store/authStore';
+import { useAppStore } from '../../../application/store/appStore';
+import { ParkingSelectionScreen } from './ParkingSelectionScreen';
 import { 
   Building2, 
   PlusCircle, 
@@ -15,6 +17,7 @@ import { parkingService } from '../../../infrastructure/services/parkingService'
 
 export const DashboardPage = () => {
   const user = useAuthStore((state) => state.user);
+  const activeParkingId = useAppStore((state) => state.activeParkingId);
   const navigate = useNavigate();
   const [parkingCount, setParkingCount] = useState(0);
 
@@ -33,6 +36,11 @@ export const DashboardPage = () => {
   }, [user]);
 
   const isAdmin = user?.role === ROLES.ADMIN;
+
+  // Interceptar el flujo inicial si es Operador y no tiene sede
+  if (user?.role === ROLES.OPERATOR && !activeParkingId) {
+    return <ParkingSelectionScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 lg:p-10 font-sans">

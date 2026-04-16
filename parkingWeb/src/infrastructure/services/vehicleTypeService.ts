@@ -2,13 +2,16 @@ import { httpClient } from '../http/httpClient';
 
 export interface VehicleTypeDTO {
   id?: string;
-  name_vehicle: string;
+  name: string;
 }
 
 export const vehicleTypeService = {
   getVehicleTypes: async () => {
     const response = await httpClient.get('/vehicle-type');
-    return response.data;
+    if(response.status !== 200){
+      return [];
+    }
+    return response.data.data;
   },
 
   saveVehicleType: async (vehicleType: VehicleTypeDTO) => {

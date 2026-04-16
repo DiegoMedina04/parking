@@ -6,8 +6,8 @@ import { NotFoundError } from '../../../domain/exceptions/NotFoundError';
 export class RetrieveVehicleUseCaseImpl implements RetrieveVehicleUseCase {
   constructor(private readonly vehicleRepositoryPort: VehicleRepositoryPort) {}
 
-  async getVehicles(): Promise<Vehicle[]> {
-    return this.vehicleRepositoryPort.findAll();
+  async getVehicles(parqueadero_id?: string): Promise<Vehicle[]> {
+    return this.vehicleRepositoryPort.findAll(parqueadero_id);
   }
 
   async findById(id: string): Promise<Vehicle | null> {

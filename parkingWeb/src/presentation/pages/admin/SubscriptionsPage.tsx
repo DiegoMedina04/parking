@@ -66,7 +66,7 @@ export const SubscriptionsPage = () => {
       setSelectedSub(sub);
       setFormData({
         parkingId: sub.parking.id,
-        planId: sub.plan.id,
+        planId: sub.plan.id || '',
         startDate: new Date(sub.startDate).toISOString().split('T')[0],
         endDate: sub.endDate ? new Date(sub.endDate).toISOString().split('T')[0] : '',
         status: sub.status
@@ -104,7 +104,7 @@ export const SubscriptionsPage = () => {
     try {
       await subscriptionService.updateSubscription(sub.id, {
         parkingId: sub.parking.id,
-        planId: sub.plan.id,
+        planId: sub.plan.id || '',
         startDate: sub.startDate.toString(),
         endDate: sub.endDate?.toString() || '',
         status: newStatus

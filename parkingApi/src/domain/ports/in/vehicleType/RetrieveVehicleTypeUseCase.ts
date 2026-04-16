@@ -1,6 +1,6 @@
 import { VehicleType } from '../../../../domain/models/VehicleType';
 
 export interface RetrieveVehicleTypeUseCase {
-    getVehicleTypes(): Promise<VehicleType[]>;
+    getVehicleTypes(parqueadero_id?: string): Promise<VehicleType[]>;
     findById(id: string): Promise<VehicleType | null>;
 }

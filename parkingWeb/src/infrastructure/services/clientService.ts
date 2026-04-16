@@ -3,17 +3,18 @@ import { httpClient } from '../http/httpClient';
 export interface ClientDTO {
   id?: string;
   name: string;
-  cedula: string;
+  document: string;
   email: string;
   phone: string;
-  parqueadero_id?: string;
 }
 
 export const clientService = {
-  getClients: async (parqueadero_id?: string) => {
-    const params = parqueadero_id ? { parqueadero_id } : {};
-    const response = await httpClient.get('/client', { params });
-    return response.data;
+  getClients: async () => {
+    const response = await httpClient.get('/client');
+    if(response.status !== 200){
+      return [];
+    }
+    return response.data.data;
   },
 
   saveClient: async (client: ClientDTO) => {

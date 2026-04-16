@@ -56,6 +56,8 @@ import { UpdateClientUseCaseImpl } from '../../application/usecases/client/Updat
 import { DeleteClientUseCaseImpl } from '../../application/usecases/client/DeleteClientUseCaseImpl';
 import { CreateVehicleUseCaseImpl } from '../../application/usecases/vehicle/CreateVehicleUseCaseImpl';
 import { RetrieveVehicleUseCaseImpl } from '../../application/usecases/vehicle/RetrieveVehicleUseCaseImpl';
+import { UpdateVehicleUseCaseImpl } from '../../application/usecases/vehicle/UpdateVehicleUseCaseImpl';
+import { DeleteVehicleUseCaseImpl } from '../../application/usecases/vehicle/DeleteVehicleUseCaseImpl';
 import { CreateTicketUseCaseImpl } from '../../application/usecases/ticket/CreateTicketUseCaseImpl';
 import { RetrieveTicketUseCaseImpl } from '../../application/usecases/ticket/RetrieveTicketUseCaseImpl';
 import { CreateVehicleTypeUseCaseImpl } from '../../application/usecases/vehicleType/CreateVehicleTypeUseCaseImpl';
@@ -205,7 +207,9 @@ export class DependencyInjection {
     const clientRepo = new TypeOrmClientRepositoryAdapter(AppDataSource.getRepository(ClientEntity));
     const createUC = new CreateVehicleUseCaseImpl(repo, typeRepo, clientRepo);
     const retrieveUC = new RetrieveVehicleUseCaseImpl(repo);
-    const service = new VehicleService(retrieveUC, createUC);
+    const updateUC = new UpdateVehicleUseCaseImpl(repo, typeRepo, clientRepo);
+    const deleteUC = new DeleteVehicleUseCaseImpl(repo);
+    const service = new VehicleService(retrieveUC, createUC, updateUC, deleteUC);
     return new VehicleController(service);
   }
 

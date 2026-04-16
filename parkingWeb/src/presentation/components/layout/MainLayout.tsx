@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
-import { Menu, X, ParkingCircle } from 'lucide-react';
+import { Menu, X, ParkingCircle, Building2 } from 'lucide-react';
+import { useAppStore } from '../../../application/store/appStore';
+import { useAuthStore } from '../../../application/store/authStore';
+import { ROLES } from '../../../domain/constants/roles';
 
 export const MainLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const activeParkingName = useAppStore((state) => state.activeParkingName);
+  const user = useAuthStore((state) => state.user);
 
   return (
     <div className="flex min-h-screen bg-slate-50 transition-all duration-300">
@@ -37,8 +42,20 @@ export const MainLayout = () => {
       <main 
         className={`flex-1 transition-all duration-300 min-h-screen relative
           ${isCollapsed ? 'lg:ml-20' : 'lg:ml-72'} 
-          pt-20 lg:pt-8 p-6 lg:p-10`}
+          pt-20 lg:pt-8 p-6 lg:p-10 flex flex-col`}
       >
+        {/* Banner Global de Contexto */}
+        {user?.role === ROLES.OPERATOR && activeParkingName && (
+          <div className="max-w-7xl w-full mx-auto mb-6 bg-blue-600 rounded-2xl p-4 flex items-center justify-between text-white shadow-xl shadow-blue-100 animate-in fade-in slide-in-from-top-4 duration-500 shrink-0 z-10 relative">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/20 p-2 rounded-xl">
+                <Building2 size={20} />
+              </div>
+              <p className="font-bold tracking-tight">Gestionando: <span className="font-black italic">{activeParkingName}</span></p>
+            </div>
+          </div>
+        )}
+
         {/* Decoración de fondo */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/5 blur-[120px] rounded-full -z-10 pointer-events-none" />
         
