@@ -52,12 +52,16 @@ import { UpdateSubscriptionUseCaseImpl } from '../../application/usecases/subscr
 import { DeleteSubscriptionUseCaseImpl } from '../../application/usecases/subscription/DeleteSubscriptionUseCaseImpl';
 import { CreateClientUseCaseImpl } from '../../application/usecases/client/CreateClientUseCaseImpl';
 import { RetrieveClientUseCaseImpl } from '../../application/usecases/client/RetrieveClientUseCaseImpl';
+import { UpdateClientUseCaseImpl } from '../../application/usecases/client/UpdateClientUseCaseImpl';
+import { DeleteClientUseCaseImpl } from '../../application/usecases/client/DeleteClientUseCaseImpl';
 import { CreateVehicleUseCaseImpl } from '../../application/usecases/vehicle/CreateVehicleUseCaseImpl';
 import { RetrieveVehicleUseCaseImpl } from '../../application/usecases/vehicle/RetrieveVehicleUseCaseImpl';
 import { CreateTicketUseCaseImpl } from '../../application/usecases/ticket/CreateTicketUseCaseImpl';
 import { RetrieveTicketUseCaseImpl } from '../../application/usecases/ticket/RetrieveTicketUseCaseImpl';
 import { CreateVehicleTypeUseCaseImpl } from '../../application/usecases/vehicleType/CreateVehicleTypeUseCaseImpl';
 import { RetrieveVehicleTypeUseCaseImpl } from '../../application/usecases/vehicleType/RetrieveVehicleTypeUseCaseImpl';
+import { UpdateVehicleTypeUseCaseImpl } from '../../application/usecases/vehicleType/UpdateVehicleTypeUseCaseImpl';
+import { DeleteVehicleTypeUseCaseImpl } from '../../application/usecases/vehicleType/DeleteVehicleTypeUseCaseImpl';
 import { CreateTicketPaymentUseCaseImpl } from '../../application/usecases/ticketPayment/CreateTicketPaymentUseCaseImpl';
 import { RetrieveTicketPaymentUseCaseImpl } from '../../application/usecases/ticketPayment/RetrieveTicketPaymentUseCaseImpl';
 import { CreatePlanMensualidadUseCaseImpl } from '../../application/usecases/planMensualidad/CreatePlanMensualidadUseCaseImpl';
@@ -189,7 +193,9 @@ export class DependencyInjection {
     const repo = new TypeOrmClientRepositoryAdapter(AppDataSource.getRepository(ClientEntity));
     const createUC = new CreateClientUseCaseImpl(repo);
     const retrieveUC = new RetrieveClientUseCaseImpl(repo);
-    const service = new ClientService(retrieveUC, createUC);
+    const updateUC = new UpdateClientUseCaseImpl(repo);
+    const deleteUC = new DeleteClientUseCaseImpl(repo);
+    const service = new ClientService(retrieveUC, createUC, updateUC, deleteUC);
     return new ClientController(service);
   }
 
@@ -207,7 +213,9 @@ export class DependencyInjection {
     const repo = new TypeOrmVehicleTypeRepositoryAdapter(AppDataSource.getRepository(VehicleTypeEntity));
     const createUC = new CreateVehicleTypeUseCaseImpl(repo);
     const retrieveUC = new RetrieveVehicleTypeUseCaseImpl(repo);
-    const service = new VehicleTypeService(retrieveUC, createUC);
+    const updateUC = new UpdateVehicleTypeUseCaseImpl(repo);
+    const deleteUC = new DeleteVehicleTypeUseCaseImpl(repo);
+    const service = new VehicleTypeService(retrieveUC, createUC, updateUC, deleteUC);
     return new VehicleTypeController(service);
   }
 

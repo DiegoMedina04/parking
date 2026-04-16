@@ -34,6 +34,8 @@ export const createClientRouter = (clientController: ClientController): Router =
    *     summary: Create a new client
    */
   router.post('/', clientController.save.bind(clientController));
+  router.put('/:id', clientController.update.bind(clientController));
+  router.delete('/:id', clientController.delete.bind(clientController));
 
   return router;
 };

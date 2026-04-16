@@ -6,8 +6,9 @@ import { ClientEntity } from '../entities/ClientEntity';
 export class TypeOrmClientRepositoryAdapter implements ClientRepositoryPort {
   constructor(private readonly clientRepository: Repository<ClientEntity>) {}
 
-  async findAll(): Promise<Client[]> {
-    const entities = await this.clientRepository.find();
+  async findAll(parqueadero_id?: string): Promise<Client[]> {
+    const whereClause = parqueadero_id ? { parqueadero_id } : {};
+    const entities = await this.clientRepository.find({ where: whereClause });
     return entities.map((entity) => entity.toDomainModel());
   }
 

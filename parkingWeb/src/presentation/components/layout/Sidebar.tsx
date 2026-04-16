@@ -12,7 +12,8 @@ import {
   TrendingUp,
   UserCircle,
   CheckCircle2,
-  Shield
+  Shield,
+  CarFront
 } from 'lucide-react';
 import { useAuthStore } from '../../../application/store/authStore';
 import { ROLES } from '../../../domain/constants/roles';
@@ -70,6 +71,18 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       path: '/planes',
       icon: <Database size={22} />,
       roles: [ROLES.ADMIN]
+    },
+    {
+      label: 'Clientes',
+      path: '/clientes',
+      icon: <Users size={22} />,
+      roles: [ROLES.OPERATOR]
+    },
+    {
+      label: 'Tipos de Vehículo',
+      path: '/tipos-vehiculos',
+      icon: <CarFront size={22} />,
+      roles: [ROLES.ADMIN, ROLES.OPERATOR]
     },
     {
       label: 'Suscripciones',

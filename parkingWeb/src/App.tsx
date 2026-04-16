@@ -9,6 +9,8 @@ import { SubscriptionsPage } from './presentation/pages/admin/SubscriptionsPage'
 import { RolesPage } from './presentation/pages/admin/RolesPage';
 import { UsersPage } from './presentation/pages/admin/UsersPage';
 import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
+import { ClientsPage } from './presentation/pages/operator/ClientsPage';
+import { VehicleTypesPage } from './presentation/pages/operator/VehicleTypesPage';
 import { MainLayout } from './presentation/components/layout/MainLayout';
 import { useAuthStore } from './application/store/authStore';
 import { ROLES } from './domain/constants/roles';
@@ -46,8 +48,12 @@ function App() {
 
             <Route element={<ProtectedRoute allowedRoles={[ROLES.OPERATOR]} />}>
               <Route path="/mis-parqueaderos" element={<MyParkingsPage />} />
+              <Route path="/clientes" element={<ClientsPage />} />
               <Route path="/operacion" element={<PlaceholderPage title="Control de Tickets" />} />
-              <Route path="/clientes" element={<PlaceholderPage title="Gestión de Clientes" />} />
+            </Route>
+
+            <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR]} />}>
+              <Route path="/tipos-vehiculos" element={<VehicleTypesPage />} />
             </Route>
 
             {/* Rutas Solo ADMIN */}

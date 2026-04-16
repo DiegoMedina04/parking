@@ -10,6 +10,8 @@ export const createVehicleTypeRouter = (vehicleTypeController: VehicleTypeContro
   router.get('/', vehicleTypeController.findAll.bind(vehicleTypeController));
   router.get('/:id', vehicleTypeController.findById.bind(vehicleTypeController));
   router.post('/', vehicleTypeController.save.bind(vehicleTypeController));
+  router.put('/:id', vehicleTypeController.update.bind(vehicleTypeController));
+  router.delete('/:id', vehicleTypeController.delete.bind(vehicleTypeController));
 
   return router;
 };

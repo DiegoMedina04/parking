@@ -16,6 +16,7 @@ import type { ParkingDTO } from '../../../infrastructure/services/parkingService
 import { ParkingFormModal } from '../../components/operator/ParkingFormModal';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { useAppStore } from '../../../application/store/appStore';
 
 export const MyParkingsPage = () => {
   const [parkings, setParkings] = useState<ParkingDTO[]>([]);
@@ -23,6 +24,7 @@ export const MyParkingsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedParking, setSelectedParking] = useState<ParkingDTO | null>(null);
+  const setActiveParking = useAppStore((state) => state.setActiveParking);
   const navigate = useNavigate();
 
   const fetchParkings = async () => {
@@ -190,7 +192,12 @@ export const MyParkingsPage = () => {
                 </div>
                 
                 <button 
-                  onClick={() => navigate(`/operacion`)}
+                  onClick={() => {
+                    if (parking.id) {
+                      setActiveParking(parking.id, parking.name);
+                      navigate(`/operacion`);
+                    }
+                  }}
                   className="w-full py-6 bg-slate-900 text-white font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-blue-600 transition-colors"
                 >
                   Abrir Operación

@@ -6,8 +6,8 @@ import { NotFoundError } from '../../../domain/exceptions/NotFoundError';
 export class RetrieveClientUseCaseImpl implements RetrieveClientUseCase {
   constructor(private readonly clientRepositoryPort: ClientRepositoryPort) {}
 
-  async getClients(): Promise<Client[]> {
-    return this.clientRepositoryPort.findAll();
+  async getClients(parqueadero_id?: string): Promise<Client[]> {
+    return this.clientRepositoryPort.findAll(parqueadero_id);
   }
 
   async findById(id: string): Promise<Client | null> {

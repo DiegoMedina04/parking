@@ -18,6 +18,9 @@ export class ClientEntity {
   @Column({ nullable: false })
   phone!: string;
 
+  @Column({ nullable: false })
+  parqueadero_id!: string;
+
   static fromDomainModel(client: Client): ClientEntity {
     const entity = new ClientEntity();
     if (client.id) entity.id = client.id;
@@ -25,6 +28,7 @@ export class ClientEntity {
     entity.document = client.document;
     entity.email = client.email;
     entity.phone = client.phone;
+    entity.parqueadero_id = client.parqueadero_id;
     return entity;
   }
 
@@ -34,7 +38,8 @@ export class ClientEntity {
       this.name,
       this.document,
       this.email,
-      this.phone
+      this.phone,
+      this.parqueadero_id
     );
   }
 }
