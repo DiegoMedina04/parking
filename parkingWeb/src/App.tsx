@@ -12,6 +12,7 @@ import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
 import { ClientsPage } from './presentation/pages/operator/ClientsPage';
 import { VehiclesPage } from './presentation/pages/operator/VehiclesPage';
 import { VehicleTypesPage } from './presentation/pages/operator/VehicleTypesPage';
+import { OperationsPage } from './presentation/pages/operator/OperationsPage';
 import { MainLayout } from './presentation/components/layout/MainLayout';
 import { useAuthStore } from './application/store/authStore';
 import { ROLES } from './domain/constants/roles';
@@ -51,7 +52,7 @@ function App() {
               <Route path="/mis-parqueaderos" element={<MyParkingsPage />} />
               <Route path="/clientes" element={<ClientsPage />} />
               <Route path="/vehiculos" element={<VehiclesPage />} />
-              <Route path="/operacion" element={<PlaceholderPage title="Control de Tickets" />} />
+              <Route path="/operacion" element={<OperationsPage />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.OPERATOR]} />}>

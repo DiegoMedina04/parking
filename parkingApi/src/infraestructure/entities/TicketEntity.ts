@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn } from 'typeorm';
 import { VehicleEntity } from './VehicleEntity';
+import { ParkingEntity } from './ParkingEntity';
 import { Ticket, TicketStatus } from '../../domain/models/Ticket';
 
 @Entity('tickets')
@@ -24,6 +25,10 @@ export class TicketEntity {
     @JoinColumn({ name: 'vehicle_id' })
     vehicle!: VehicleEntity;
 
+    @ManyToOne(() => ParkingEntity)
+    @JoinColumn({ name: 'parqueadero_id' })
+    parking!: ParkingEntity;
+
     static fromDomainModel(ticket: Ticket): TicketEntity {
         const entity = new TicketEntity();
         entity.id = ticket.id;
@@ -31,6 +36,9 @@ export class TicketEntity {
         entity.exitDate = ticket.exitDate;
         entity.status = ticket.status;
         entity.vehicle = VehicleEntity.fromDomainModel(ticket.vehicle);
+        if (ticket.parking) {
+            entity.parking = ParkingEntity.fromDomainModel(ticket.parking);
+        }
         return entity;
     }
 
@@ -38,6 +46,7 @@ export class TicketEntity {
         return new Ticket(
             this.id,
             this.vehicle.toDomainModel(),
+            this.parking.toDomainModel(),
             this.entryDate,
             this.exitDate,
             this.status

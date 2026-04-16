@@ -10,8 +10,8 @@ export class TicketService implements CreateTicketUseCase, RetrieveTicketUseCase
         private readonly updateTicketUseCase: UpdateTicketUseCase
     ) {}
 
-    async getTickets(): Promise<Ticket[]> {
-        return this.retrieveTicketUseCase.getTickets();
+    async getTickets(status?: string, parqueadero_id?: string): Promise<Ticket[]> {
+        return this.retrieveTicketUseCase.getTickets(status, parqueadero_id);
     }
 
     async findById(id: string): Promise<Ticket | null> {

@@ -5,8 +5,8 @@ import { TicketRepositoryPort } from '../../../domain/ports/out/TicketRepository
 export class RetrieveTicketUseCaseImpl implements RetrieveTicketUseCase {
     constructor(private readonly ticketRepositoryPort: TicketRepositoryPort) {}
 
-    async getTickets(): Promise<Ticket[]> {
-        return this.ticketRepositoryPort.findAll();
+    async getTickets(status?: string, parqueadero_id?: string): Promise<Ticket[]> {
+        return this.ticketRepositoryPort.findAll(status, parqueadero_id);
     }
 
     async findById(id: string): Promise<Ticket | null> {

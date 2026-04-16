@@ -16,7 +16,8 @@ export class TicketController {
      *         description: List of tickets
      */
     async findAll(req: Request, res: Response) {
-        const tickets = await this.ticketService.getTickets();
+        const { status, parqueadero_id } = req.query;
+        const tickets = await this.ticketService.getTickets(status as string, parqueadero_id as string);
         res.json(tickets);
     }
 
