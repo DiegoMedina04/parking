@@ -16,4 +16,8 @@ export class RetrieveTicketPaymentUseCaseImpl implements RetrieveTicketPaymentUs
     async findByTicketId(ticketId: string): Promise<TicketPayment | null> {
         return this.ticketPaymentRepository.findByTicketId(ticketId);
     }
+
+    async findByParkingAndDate(parkingId: string, date: Date): Promise<TicketPayment[]> {
+        return this.ticketPaymentRepository.findByParkingAndDate(parkingId, date);
+    }
 }

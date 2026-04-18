@@ -45,8 +45,8 @@ export class TicketEntity {
     toDomainModel(): Ticket {
         return new Ticket(
             this.id,
-            this.vehicle.toDomainModel(),
-            this.parking.toDomainModel(),
+            this.vehicle?.toDomainModel(),
+            this.parking?.toDomainModel(),
             this.entryDate,
             this.exitDate,
             this.status

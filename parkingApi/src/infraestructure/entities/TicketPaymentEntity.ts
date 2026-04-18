@@ -39,11 +39,11 @@ export class TicketPaymentEntity {
     toDomainModel(): TicketPayment {
         return new TicketPayment(
             this.id,
-            this.ticket.toDomainModel(),
+            this.ticket?.toDomainModel(),
             this.paymentDate,
             Number(this.amount),
             this.paymentMethod,
-            this.parking.toDomainModel()
+            this.parking?.toDomainModel()
         );
     }
 }

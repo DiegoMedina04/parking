@@ -45,4 +45,23 @@ export class TicketPaymentController {
             res.status(404).json({ message: 'No se encontró pago para este ticket' });
         }
     }
+
+    async getPaymentsReport(req: Request, res: Response) {
+        try {
+            const { parqueadero_id, date } = req.query;
+            if (!parqueadero_id) {
+                return res.status(400).json({ message: 'parqueadero_id es requerido' });
+            }
+
+            const reportDate = date ? new Date(date as string) : new Date();
+            const report = await this.ticketPaymentService.findByParkingAndDate(parqueadero_id as string, reportDate);
+            
+            res.json({
+                success: true,
+                data: report
+            });
+        } catch (error: any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
 }

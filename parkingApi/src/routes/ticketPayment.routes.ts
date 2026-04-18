@@ -5,6 +5,7 @@ export const createTicketPaymentRouter = (controller: TicketPaymentController): 
     const router = Router();
 
     router.get('/', (req, res) => controller.findAll(req, res));
+    router.get('/report', (req, res) => controller.getPaymentsReport(req, res));
     router.get('/:id', (req, res) => controller.findById(req, res));
     router.get('/ticket/:ticketId', (req, res) => controller.findByTicketId(req, res));
     router.post('/', (req, res) => controller.save(req, res));

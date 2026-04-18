@@ -108,10 +108,10 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       roles: [ROLES.ADMIN]
     },
     {
-      label: 'Reportes',
-      path: '/reportes',
+      label: 'Cierre de Caja',
+      path: '/reporte-pagos',
       icon: <TrendingUp size={22} />,
-      roles: [ROLES.ADMIN]
+      roles: [ROLES.ADMIN, ROLES.OPERATOR]
     }
   ].filter(item => user && item.roles.includes(user.role as any));
 

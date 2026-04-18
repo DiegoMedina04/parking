@@ -23,4 +23,8 @@ export class TicketPaymentService implements CreateTicketPaymentUseCase, Retriev
     async findByTicketId(ticketId: string): Promise<TicketPayment | null> {
         return this.retrieveTicketPaymentUseCase.findByTicketId(ticketId);
     }
+
+    async findByParkingAndDate(parkingId: string, date: Date): Promise<TicketPayment[]> {
+        return this.retrieveTicketPaymentUseCase.findByParkingAndDate(parkingId, date);
+    }
 }

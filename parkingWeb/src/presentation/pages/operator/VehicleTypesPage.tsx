@@ -26,7 +26,7 @@ export const VehicleTypesPage = () => {
     try {
       setLoading(true);
       const response = await vehicleTypeService.getVehicleTypes();
-      setTypes(response.data);
+      setTypes(response);
     } catch (error) {
       toast.error('Error al cargar tipos de vehículos');
     } finally {
