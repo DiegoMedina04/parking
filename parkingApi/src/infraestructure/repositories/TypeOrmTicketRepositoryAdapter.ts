@@ -2,6 +2,8 @@ import { Repository } from 'typeorm';
 import { TicketRepositoryPort } from '../../domain/ports/out/TicketRepositoryPort';
 import { Ticket, TicketStatus } from '../../domain/models/Ticket';
 import { TicketEntity } from '../entities/TicketEntity';
+import { TicketPayment } from '../../domain/models/TicketPayment';
+import { TicketPaymentEntity } from '../entities/TicketPaymentEntity';
 
 export class TypeOrmTicketRepositoryAdapter implements TicketRepositoryPort {
     constructor(private readonly ticketRepository: Repository<TicketEntity>) {}
@@ -51,5 +53,19 @@ export class TypeOrmTicketRepositoryAdapter implements TicketRepositoryPort {
             relations: ['vehicle', 'parking']
         });
         return entity ? entity.toDomainModel() : null;
+    }
+
+    async checkout(ticket: Ticket, payment: TicketPayment): Promise<Ticket> {
+        return await this.ticketRepository.manager.transaction(async (transactionalEntityManager) => {
+            // 1. Actualizar Ticket
+            const ticketEntity = TicketEntity.fromDomainModel(ticket);
+            const savedTicket = await transactionalEntityManager.save(TicketEntity, ticketEntity);
+            
+            // 2. Registrar Pago
+            const paymentEntity = TicketPaymentEntity.fromDomainModel(payment);
+            await transactionalEntityManager.save(TicketPaymentEntity, paymentEntity);
+            
+            return savedTicket.toDomainModel();
+        });
     }
 }

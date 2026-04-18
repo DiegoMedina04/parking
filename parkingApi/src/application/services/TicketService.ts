@@ -26,7 +26,7 @@ export class TicketService implements CreateTicketUseCase, RetrieveTicketUseCase
         return this.createTicketUseCase.save(ticket);
     }
 
-    async checkout(id: string, exitDate?: Date): Promise<Ticket> {
-        return this.updateTicketUseCase.checkout(id, exitDate);
+    async checkout(id: string, amount: number, paymentMethod: string, exitDate?: Date): Promise<Ticket> {
+        return this.updateTicketUseCase.checkout(id, amount, paymentMethod, exitDate);
     }
 }

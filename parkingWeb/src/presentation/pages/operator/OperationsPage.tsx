@@ -16,6 +16,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { useAppStore } from '../../../application/store/appStore';
 import { ticketService, type TicketDTO, TicketStatus } from '../../../infrastructure/services/ticketService';
 import { TicketFormModal } from '../../components/operator/TicketFormModal';
+import { CheckoutModal } from '../../components/operator/CheckoutModal';
 
 // Hook para el cronómetro en vivo
 const ElapsedTime = ({ entryDate }: { entryDate: string }) => {
@@ -50,6 +51,8 @@ export const OperationsPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<TicketDTO | null>(null);
   
   const { activeParkingId, activeParkingName } = useAppStore();
 
@@ -72,15 +75,26 @@ export const OperationsPage = () => {
     }
   }, [activeParkingId]);
 
-  const handleCheckout = async (id: string, licensePlate: string) => {
-    if (window.confirm(`¿Dar salida al vehículo con placa ${licensePlate}?`)) {
-       try {
-         await ticketService.checkoutTicket(id, new Date().toISOString());
-         toast.success(`Ticket cerrado: ${licensePlate}`);
-         fetchTickets();
-       } catch (error: any) {
-         toast.error(error.response?.data?.message || 'Error al procesar salida');
-       }
+  const handleOpenCheckout = (ticket: TicketDTO) => {
+    setSelectedTicket(ticket);
+    setIsCheckoutModalOpen(true);
+  };
+
+  const handleConfirmCheckout = async (amount: number, paymentMethod: string) => {
+    if (!selectedTicket?.id) return;
+    
+    try {
+      await ticketService.checkoutTicket(
+        selectedTicket.id, 
+        amount, 
+        paymentMethod, 
+        new Date().toISOString()
+      );
+      toast.success(`Pago registrado: ${selectedTicket.vehicle?.licensePlate}`);
+      fetchTickets();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Error al procesar salida');
+      throw error; // Propagar para que el modal maneje el loading
     }
   };
 
@@ -198,7 +212,7 @@ export const OperationsPage = () => {
                       </td>
                       <td className="px-10 py-8 whitespace-nowrap text-right">
                         <button 
-                          onClick={() => ticket.id && handleCheckout(ticket.id, ticket.vehicle?.licensePlate || '')}
+                          onClick={() => handleOpenCheckout(ticket)}
                           className="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-6 py-4 rounded-3xl shadow-lg shadow-indigo-200 transition-all transform active:scale-95 inline-flex items-center gap-2"
                         >
                           Cerrar Ticket <CheckCircle2 size={20} />
@@ -226,6 +240,18 @@ export const OperationsPage = () => {
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchTickets}
       />
+
+      {selectedTicket && (
+        <CheckoutModal 
+          isOpen={isCheckoutModalOpen}
+          onClose={() => {
+            setIsCheckoutModalOpen(false);
+            setSelectedTicket(null);
+          }}
+          onConfirm={handleConfirmCheckout}
+          ticket={selectedTicket}
+        />
+      )}
     </div>
   );
 };

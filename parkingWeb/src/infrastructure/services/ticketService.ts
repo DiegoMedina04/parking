@@ -45,8 +45,12 @@ export const ticketService = {
     return response.data;
   },
 
-  checkoutTicket: async (id: string, exitDate?: string) => {
-    const payload = exitDate ? { exitDate } : {};
+  checkoutTicket: async (id: string, amount: number, paymentMethod: string, exitDate?: string) => {
+    const payload = { 
+      exitDate: exitDate || new Date().toISOString(),
+      amount,
+      paymentMethod
+    };
     const response = await httpClient.patch<TicketDTO>(`/ticket/checkout/${id}`, payload);
     return response.data;
   }

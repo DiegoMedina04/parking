@@ -99,8 +99,13 @@ export class TicketController {
      */
     async checkout(req: Request, res: Response) {
         const id = req.params.id as string;
-        const { exitDate } = req.body;
-        const updatedTicket = await this.ticketService.checkout(id, exitDate ? new Date(exitDate) : undefined);
+        const { exitDate, amount, paymentMethod } = req.body;
+        const updatedTicket = await this.ticketService.checkout(
+            id, 
+            Number(amount), 
+            paymentMethod, 
+            exitDate ? new Date(exitDate) : undefined
+        );
         res.json(updatedTicket);
     }
 
