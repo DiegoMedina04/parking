@@ -26,6 +26,7 @@ import { TypeOrmVehicleTypeRepositoryAdapter } from '../repositories/TypeOrmVehi
 import { TypeOrmTicketPaymentRepositoryAdapter } from '../repositories/TypeOrmTicketPaymentRepositoryAdapter';
 import { TypeOrmPlanMensualidadRepositoryAdapter } from '../repositories/TypeOrmPlanMensualidadRepositoryAdapter';
 import { TypeOrmMensualidadRepositoryAdapter } from '../repositories/TypeOrmMensualidadRepositoryAdapter';
+import { TypeOrmMensualidadPaymentRepositoryAdapter } from '../repositories/TypeOrmMensualidadPaymentRepositoryAdapter';
 
 // Use Case Implementations
 import { CreateUserUseCaseImpl } from '../../application/usecases/user/CreateUserUseCaseImpl';
@@ -71,6 +72,7 @@ import { RetrievePlanMensualidadUseCaseImpl } from '../../application/usecases/p
 import { CreateMensualidadUseCaseImpl } from '../../application/usecases/mensualidad/CreateMensualidadUseCaseImpl';
 import { RetrieveMensualidadUseCaseImpl } from '../../application/usecases/mensualidad/RetrieveMensualidadUseCaseImpl';
 import { ProcessMensualidadPaymentUseCaseImpl } from '../../application/usecases/mensualidad/ProcessMensualidadPaymentUseCaseImpl';
+import { GetPaymentSummaryUseCaseImpl } from '../../application/usecases/mensualidad/GetPaymentSummaryUseCaseImpl';
 import { UpdateTicketUseCaseImpl } from '../../application/usecases/ticket/UpdateTicketUseCaseImpl';
 
 // Services
@@ -271,6 +273,7 @@ export class DependencyInjection {
 
   static getMensualidadController(): MensualidadController {
     const repo = new TypeOrmMensualidadRepositoryAdapter();
+    const paymentRepo = new TypeOrmMensualidadPaymentRepositoryAdapter();
     const feeRepo = new TypeOrmFeeRepositoryAdapter(AppDataSource.getRepository(FeeEntity));
     const vehicleRepo = new TypeOrmVehicleRepositoryAdapter(AppDataSource.getRepository(VehicleEntity));
     const parkingRepo = new TypeOrmParkingRepositoryAdapter(AppDataSource.getRepository(ParkingEntity));
@@ -278,7 +281,8 @@ export class DependencyInjection {
     const createUC = new CreateMensualidadUseCaseImpl(repo, feeRepo, vehicleRepo, parkingRepo);
     const retrieveUC = new RetrieveMensualidadUseCaseImpl(repo);
     const processPaymentUC = new ProcessMensualidadPaymentUseCaseImpl(repo);
-    const service = new MensualidadService(createUC, retrieveUC, processPaymentUC);
+    const getPaymentSummaryUC = new GetPaymentSummaryUseCaseImpl(paymentRepo);
+    const service = new MensualidadService(createUC, retrieveUC, processPaymentUC, getPaymentSummaryUC);
     return new MensualidadController(service);
   }
 }

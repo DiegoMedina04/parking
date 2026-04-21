@@ -17,7 +17,8 @@ import {
   MapPin,
   RefreshCcw,
   DollarSign,
-  Calendar
+  Calendar,
+  Receipt
 } from 'lucide-react';
 import { useAuthStore } from '../../../application/store/authStore';
 import { useAppStore } from '../../../application/store/appStore';
@@ -118,6 +119,12 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       label: 'Mensualidades',
       path: '/mensualidades',
       icon: <Calendar size={22} />,
+      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+    },
+    {
+      label: 'Reporte de Pagos',
+      path: '/recaudos',
+      icon: <Receipt size={22} />,
       roles: [ROLES.ADMIN, ROLES.OPERATOR]
     }
   ].filter(item => user && item.roles.includes(user.role as any));

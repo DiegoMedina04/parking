@@ -86,5 +86,23 @@ export const monthlyService = {
   processPayment: async (id: string, data: { valor: number, metodoPago: string, parqueaderoId: string }) => {
     const response = await httpClient.post<{ status: string, message: string }>(`/mensualidades/${id}/pay`, data);
     return response.data;
+  },
+
+  getPaymentSummary: async (parqueaderoId: string, fechaInicio?: string, fechaFin?: string) => {
+    const response = await httpClient.get<{ status: string, data: {
+      totalRecaudado: number;
+      totalTransacciones: number;
+      pagos: {
+        id: string;
+        fechaPago: string;
+        valor: number;
+        metodoPago: string;
+        vehiculoPlaca: string;
+        tarifaNombre: string;
+      }[];
+    }}>('/mensualidades/payments/summary', {
+      params: { parqueadero_id: parqueaderoId, fecha_inicio: fechaInicio, fecha_fin: fechaFin }
+    });
+    return response.data.data;
   }
 };

@@ -34,7 +34,7 @@ export const ClientsPage = () => {
     try {
       setLoading(true);
       const response = await clientService.getClients();
-      setClients(response.data);
+      setClients(response);
     } catch (error) {
       toast.error('Error al cargar clientes');
     } finally {
@@ -75,6 +75,7 @@ export const ClientsPage = () => {
       }
     }
   };
+
 
   const filteredClients = clients.filter(c => 
     c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 

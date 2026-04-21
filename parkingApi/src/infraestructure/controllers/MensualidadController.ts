@@ -49,4 +49,23 @@ export class MensualidadController {
             res.status(400).json({ status: 'error', message: error.message });
         }
     }
+
+    async getPaymentSummary(req: Request, res: Response): Promise<void> {
+        try {
+            const { parqueadero_id, fecha_inicio, fecha_fin } = req.query;
+            if (!parqueadero_id) {
+                res.status(400).json({ status: 'error', message: 'parqueadero_id es requerido' });
+                return;
+            }
+            const summary = await this.mensualidadService.getPaymentSummary(
+                parqueadero_id as string,
+                fecha_inicio as string | undefined,
+                fecha_fin as string | undefined
+            );
+            res.status(200).json({ status: 'success', data: summary });
+        } catch (error: any) {
+            res.status(500).json({ status: 'error', message: error.message });
+        }
+    }
 }
+
