@@ -10,7 +10,9 @@ export class CreatePlanMensualidadUseCaseImpl implements CreatePlanMensualidadUs
             planData.id || '',
             planData.nombre,
             planData.duracion,
-            planData.valor
+            planData.valor,
+            planData.parqueadero_id,
+            planData.tipo_vehiculo_id
         );
         return this.repository.save(plan);
     }

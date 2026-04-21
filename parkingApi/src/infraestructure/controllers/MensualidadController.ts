@@ -21,6 +21,11 @@ export class MensualidadController {
     }
 
     async findAll(req: Request, res: Response) {
+        const { parqueadero_id } = req.query;
+        if (parqueadero_id) {
+            const mensualidades = await this.mensualidadService.findAllByParking(parqueadero_id as string);
+            return res.json(mensualidades);
+        }
         const mensualidades = await this.mensualidadService.findAll();
         res.json(mensualidades);
     }

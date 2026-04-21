@@ -10,6 +10,7 @@ import { RolesPage } from './presentation/pages/admin/RolesPage';
 import { UsersPage } from './presentation/pages/admin/UsersPage';
 import FeesPage from './presentation/pages/operator/FeesPage';
 import { PaymentsReportPage } from './presentation/pages/operator/PaymentsReportPage';
+import { MensualidadesPage } from './presentation/pages/operator/MensualidadesPage';
 import { MyParkingsPage } from './presentation/pages/operator/MyParkingsPage';
 import { ClientsPage } from './presentation/pages/operator/ClientsPage';
 import { VehiclesPage } from './presentation/pages/operator/VehiclesPage';
@@ -61,6 +62,7 @@ function App() {
               <Route path="/tipos-vehiculos" element={<VehicleTypesPage />} />
               <Route path="/tarifas" element={<FeesPage />} />
               <Route path="/reporte-pagos" element={<PaymentsReportPage />} />
+              <Route path="/mensualidades" element={<MensualidadesPage />} />
             </Route>
 
             {/* Rutas Solo ADMIN */}

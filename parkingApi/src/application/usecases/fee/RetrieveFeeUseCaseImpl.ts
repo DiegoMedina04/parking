@@ -4,8 +4,8 @@ import { FeeRepositoryPort } from '../../../domain/ports/out/FeeRepositoryPort';
 export class RetrieveFeeUseCaseImpl {
   constructor(private readonly feeRepository: FeeRepositoryPort) {}
 
-  async findAll(parqueadero_id?: string): Promise<Fee[]> {
-    return this.feeRepository.findAll(parqueadero_id);
+  async findAll(parqueadero_id?: string, tipo_vehiculo_id?: string): Promise<Fee[]> {
+    return this.feeRepository.findAll(parqueadero_id, tipo_vehiculo_id);
   }
 
   async findById(id: string): Promise<Fee | null> {

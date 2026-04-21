@@ -12,4 +12,8 @@ export class RetrievePlanMensualidadUseCaseImpl implements RetrievePlanMensualid
     async findAll(): Promise<PlanMensualidad[]> {
         return this.repository.findAll();
     }
+
+    async findByParkingAndVehicleType(parkingId: string, vehicleTypeId: string): Promise<PlanMensualidad[]> {
+        return this.repository.findByParkingAndVehicleType(parkingId, vehicleTypeId);
+    }
 }

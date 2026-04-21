@@ -270,11 +270,11 @@ export class DependencyInjection {
 
   static getMensualidadController(): MensualidadController {
     const repo = new TypeOrmMensualidadRepositoryAdapter();
-    const planRepo = new TypeOrmPlanMensualidadRepositoryAdapter();
+    const feeRepo = new TypeOrmFeeRepositoryAdapter(AppDataSource.getRepository(FeeEntity));
     const vehicleRepo = new TypeOrmVehicleRepositoryAdapter(AppDataSource.getRepository(VehicleEntity));
     const parkingRepo = new TypeOrmParkingRepositoryAdapter(AppDataSource.getRepository(ParkingEntity));
     
-    const createUC = new CreateMensualidadUseCaseImpl(repo, planRepo, vehicleRepo, parkingRepo);
+    const createUC = new CreateMensualidadUseCaseImpl(repo, feeRepo, vehicleRepo, parkingRepo);
     const retrieveUC = new RetrieveMensualidadUseCaseImpl(repo);
     const service = new MensualidadService(createUC, retrieveUC);
     return new MensualidadController(service);

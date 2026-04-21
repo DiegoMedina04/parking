@@ -25,7 +25,7 @@ export class FeeController {
 
   async getAll(req: Request, res: Response): Promise<void> {
     try {
-      const { parqueadero_id } = req.query;
+      const { parqueadero_id, tipo_vehiculo_id } = req.query;
       
       if (!parqueadero_id || typeof parqueadero_id !== 'string') {
         res.status(400).json({ 
@@ -35,7 +35,10 @@ export class FeeController {
         return;
       }
 
-      const fees = await this.feeService.getAllFees(parqueadero_id);
+      const fees = await this.feeService.getAllFees(
+        parqueadero_id, 
+        tipo_vehiculo_id as string
+      );
       res.status(200).json({ status: 'success', data: fees });
     } catch (error: any) {
       res.status(500).json({ status: 'error', message: error.message });

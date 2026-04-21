@@ -13,6 +13,10 @@ export class RetrieveMensualidadUseCaseImpl implements RetrieveMensualidadUseCas
         return this.repository.findAll();
     }
 
+    async findAllByParking(parkingId: string): Promise<Mensualidad[]> {
+        return this.repository.findAllByParking(parkingId);
+    }
+
     async findByVehicleId(vehicleId: string): Promise<Mensualidad[]> {
         return this.repository.findByVehicleId(vehicleId);
     }

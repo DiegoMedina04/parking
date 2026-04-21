@@ -16,8 +16,8 @@ export class FeeService {
     return this.createFeeUseCase.execute(fee);
   }
 
-  async getAllFees(parqueadero_id?: string): Promise<Fee[]> {
-    return this.retrieveFeeUseCase.findAll(parqueadero_id);
+  async getAllFees(parqueadero_id?: string, tipo_vehiculo_id?: string): Promise<Fee[]> {
+    return this.retrieveFeeUseCase.findAll(parqueadero_id, tipo_vehiculo_id);
   }
 
   async getFeeById(id: string): Promise<Fee | null> {

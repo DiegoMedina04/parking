@@ -21,6 +21,16 @@ export class PlanMensualidadController {
     }
 
     async findAll(req: Request, res: Response) {
+        const { parqueadero_id, tipo_vehiculo_id } = req.query;
+        
+        if (parqueadero_id && tipo_vehiculo_id) {
+            const plans = await this.planService.findByParkingAndVehicleType(
+                parqueadero_id as string, 
+                tipo_vehiculo_id as string
+            );
+            return res.json(plans);
+        }
+
         const plans = await this.planService.findAll();
         res.json(plans);
     }

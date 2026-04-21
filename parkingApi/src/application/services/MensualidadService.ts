@@ -20,6 +20,10 @@ export class MensualidadService {
         return this.retrieveUseCase.findAll();
     }
 
+    async findAllByParking(parkingId: string): Promise<Mensualidad[]> {
+        return this.retrieveUseCase.findAllByParking(parkingId);
+    }
+
     async findByVehicleId(vehicleId: string): Promise<Mensualidad[]> {
         return this.retrieveUseCase.findByVehicleId(vehicleId);
     }

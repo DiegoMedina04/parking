@@ -20,14 +20,23 @@ export class TypeOrmMensualidadRepositoryAdapter implements MensualidadRepositor
     async findById(id: string): Promise<Mensualidad | null> {
         const entity = await this.repository.findOne({
             where: { id },
-            relations: ['plan', 'vehiculo', 'parqueadero', 'vehiculo.vehicleType', 'vehiculo.client']
+            relations: ['plan', 'vehiculo', 'parqueadero', 'vehiculo.type', 'vehiculo.client']
         });
         return entity ? entity.toDomainModel() : null;
     }
 
     async findAll(): Promise<Mensualidad[]> {
         const entities = await this.repository.find({
-            relations: ['plan', 'vehiculo', 'parqueadero']
+            relations: ['plan', 'vehiculo', 'vehiculo.type', 'parqueadero']
+        });
+        return entities.map(entity => entity.toDomainModel());
+    }
+
+    async findAllByParking(parkingId: string): Promise<Mensualidad[]> {
+        const entities = await this.repository.find({
+            where: { parqueadero: { id: parkingId } },
+            relations: ['plan', 'vehiculo', 'vehiculo.type', 'parqueadero'],
+            order: { fechaFin: 'DESC' }
         });
         return entities.map(entity => entity.toDomainModel());
     }
@@ -35,7 +44,7 @@ export class TypeOrmMensualidadRepositoryAdapter implements MensualidadRepositor
     async findByVehicleId(vehicleId: string): Promise<Mensualidad[]> {
         const entities = await this.repository.find({
             where: { vehiculo: { id: vehicleId } },
-            relations: ['plan', 'vehiculo', 'parqueadero']
+            relations: ['plan', 'vehiculo', 'vehiculo.type', 'parqueadero']
         });
         return entities.map(entity => entity.toDomainModel());
     }

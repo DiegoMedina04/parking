@@ -19,4 +19,8 @@ export class PlanMensualidadService {
     async findAll(): Promise<PlanMensualidad[]> {
         return this.retrieveUseCase.findAll();
     }
+
+    async findByParkingAndVehicleType(parkingId: string, vehicleTypeId: string): Promise<PlanMensualidad[]> {
+        return this.retrieveUseCase.findByParkingAndVehicleType(parkingId, vehicleTypeId);
+    }
 }

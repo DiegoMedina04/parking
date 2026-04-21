@@ -27,6 +27,14 @@ export class TypeOrmPlanMensualidadRepositoryAdapter implements PlanMensualidadR
         return entities.map(entity => entity.toDomainModel());
     }
 
+    async findByParkingAndVehicleType(parkingId: string, vehicleTypeId: string): Promise<PlanMensualidad[]> {
+        const entities = await this.repository.findBy({ 
+            parqueadero_id: parkingId, 
+            tipo_vehiculo_id: vehicleTypeId 
+        });
+        return entities.map(entity => entity.toDomainModel());
+    }
+
     async delete(id: string): Promise<void> {
         await this.repository.delete(id);
     }

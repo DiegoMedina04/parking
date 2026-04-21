@@ -14,12 +14,16 @@ import { useNavigate } from 'react-router-dom';
 import { ROLES } from '../../../domain/constants/roles';
 import { useEffect, useState } from 'react';
 import { parkingService } from '../../../infrastructure/services/parkingService';
+import { monthlyService, type MensualidadDTO } from '../../../infrastructure/services/monthlyService';
+import { toast } from 'react-hot-toast';
 
 export const DashboardPage = () => {
   const user = useAuthStore((state) => state.user);
   const activeParkingId = useAppStore((state) => state.activeParkingId);
   const navigate = useNavigate();
   const [parkingCount, setParkingCount] = useState(0);
+  const [monthlyCount, setMonthlyCount] = useState(0);
+  const [expiringSoon, setExpiringSoon] = useState<MensualidadDTO[]>([]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -27,13 +31,28 @@ export const DashboardPage = () => {
         try {
           const response = await parkingService.getParkings();
           setParkingCount(response.data.length);
+          
+          if (activeParkingId) {
+             const mData = await monthlyService.getMensualidadesByParking(activeParkingId);
+             setMonthlyCount(mData.length);
+             
+             // Filtrar por vencer (3 días o menos)
+             const now = new Date();
+             const soon = mData.filter(m => {
+                const endDate = new Date(m.fechaFin);
+                const diffTime = endDate.getTime() - now.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return diffDays >= 0 && diffDays <= 3;
+             });
+             setExpiringSoon(soon);
+          }
         } catch (error) {
           console.error("Error fetching stats", error);
         }
       }
     };
     fetchStats();
-  }, [user]);
+  }, [user, activeParkingId]);
 
   const isAdmin = user?.role === ROLES.ADMIN;
 
@@ -114,7 +133,7 @@ export const DashboardPage = () => {
             </div>
             <p className="text-slate-400 font-black text-xs uppercase tracking-widest mb-4">Mensualidades</p>
             <div className="flex items-end justify-between relative z-10">
-              <h3 className="text-5xl font-black text-slate-800 tracking-tighter">0</h3>
+              <h3 className="text-5xl font-black text-slate-800 tracking-tighter">{isAdmin ? '--' : monthlyCount}</h3>
               <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
                 <Users size={24} />
               </div>
@@ -180,6 +199,28 @@ export const DashboardPage = () => {
 
           <div className="space-y-6">
             <h4 className="text-2xl font-black text-slate-800 tracking-tight">Notificaciones</h4>
+            
+            {expiringSoon.length > 0 && (
+              <div className="bg-amber-500 text-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden animate-bounce-subtle">
+                 <div className="absolute top-0 right-0 p-8 opacity-20">
+                    <AlertCircle size={80} />
+                 </div>
+                 <p className="text-amber-100 font-black text-xs uppercase tracking-widest mb-6">Alerta de Vencimiento</p>
+                 <h5 className="text-2xl font-black mb-4 leading-tight">
+                    {expiringSoon.length} mensualidades vencen pronto.
+                 </h5>
+                 <p className="text-amber-50 font-bold text-sm leading-relaxed mb-8">
+                   Hay clientes que están a 3 días o menos de finalizar su vigencia. Te recomendamos contactarlos.
+                 </p>
+                 <button 
+                  onClick={() => navigate('/mensualidades')}
+                  className="bg-white/20 hover:bg-white/30 text-white font-black px-6 py-3 rounded-2xl flex items-center gap-2 transition-all"
+                 >
+                   Ver Listado <ArrowRight size={18} />
+                 </button>
+              </div>
+            )}
+
             <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
                <div className="absolute top-0 right-0 p-8 opacity-10">
                   <CloudLightning size={80} />

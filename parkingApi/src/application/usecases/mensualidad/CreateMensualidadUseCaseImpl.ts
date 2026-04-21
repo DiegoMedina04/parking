@@ -1,15 +1,16 @@
 import { CreateMensualidadUseCase } from '../../../domain/ports/in/mensualidad/CreateMensualidadUseCase';
 import { Mensualidad, MensualidadStatus } from '../../../domain/models/Mensualidad';
 import { MensualidadRepositoryPort } from '../../../domain/ports/out/MensualidadRepositoryPort';
-import { PlanMensualidadRepositoryPort } from '../../../domain/ports/out/PlanMensualidadRepositoryPort';
+import { FeeRepositoryPort } from '../../../domain/ports/out/FeeRepositoryPort';
 import { VehicleRepositoryPort } from '../../../domain/ports/out/VehicleRepositoryPort';
 import { ParkingRepositoryPort } from '../../../domain/ports/out/ParkingRepositoryPort';
 import { NotFoundError } from '../../../domain/exceptions/NotFoundError';
+import { PlanMensualidad } from '../../../domain/models/PlanMensualidad';
 
 export class CreateMensualidadUseCaseImpl implements CreateMensualidadUseCase {
     constructor(
         private readonly mensualidadRepository: MensualidadRepositoryPort,
-        private readonly planRepository: PlanMensualidadRepositoryPort,
+        private readonly feeRepository: FeeRepositoryPort,
         private readonly vehicleRepository: VehicleRepositoryPort,
         private readonly parkingRepository: ParkingRepositoryPort
     ) {}
@@ -19,15 +20,25 @@ export class CreateMensualidadUseCaseImpl implements CreateMensualidadUseCase {
         const vehiculoId = mensualidadData.vehiculoId || (mensualidadData.vehiculo && mensualidadData.vehiculo.id);
         const parqueaderoId = mensualidadData.parqueaderoId || (mensualidadData.parqueadero && mensualidadData.parqueadero.id);
 
-        if (!planId) throw new NotFoundError('Plan id is required.');
+        if (!planId) throw new NotFoundError('Plan id (fee) is required.');
         if (!vehiculoId) throw new NotFoundError('Vehicle id is required.');
         if (!parqueaderoId) throw new NotFoundError('Parking id is required.');
 
-        // Validate Plan
-        const plan = await this.planRepository.findById(planId);
-        if (!plan) {
-            throw new NotFoundError(`PlanMensualidad con ID ${planId} no encontrado.`);
+        // Validate Fee (Tarifa)
+        const fee = await this.feeRepository.findById(planId);
+        if (!fee) {
+            throw new NotFoundError(`Tarifa con ID ${planId} no encontrada.`);
         }
+
+        // Mapear Fee a PlanMensualidad para mantener compatibilidad con el modelo de Mensualidad
+        const mappedPlan = new PlanMensualidad(
+            fee.id,
+            fee.nombre_tarifa,
+            `${fee.tiempo_minutos} min`,
+            fee.valor,
+            fee.parqueadero_id,
+            fee.tipo_vehiculo_id
+        );
 
         // Validate Vehicle
         const vehicle = await this.vehicleRepository.findById(vehiculoId);
@@ -44,7 +55,7 @@ export class CreateMensualidadUseCaseImpl implements CreateMensualidadUseCase {
         // Transform and default logic
         const mensualidad = new Mensualidad(
             mensualidadData.id || '',
-            plan,
+            mappedPlan,
             new Date(mensualidadData.fechaInicio),
             new Date(mensualidadData.fechaFin),
             mensualidadData.estado || MensualidadStatus.PENDIENTE,

@@ -6,8 +6,11 @@ import { FeeEntity } from '../entities/FeeEntity';
 export class TypeOrmFeeRepositoryAdapter implements FeeRepositoryPort {
   constructor(private readonly feeRepository: Repository<FeeEntity>) {}
 
-  async findAll(parqueadero_id?: string): Promise<Fee[]> {
-    const whereClause = parqueadero_id ? { parqueadero_id } : {};
+  async findAll(parqueadero_id?: string, tipo_vehiculo_id?: string): Promise<Fee[]> {
+    const whereClause: any = {};
+    if (parqueadero_id) whereClause.parqueadero_id = parqueadero_id;
+    if (tipo_vehiculo_id) whereClause.tipo_vehiculo_id = tipo_vehiculo_id;
+
     const entities = await this.feeRepository.find({ 
       where: whereClause,
       relations: ['tipoVehiculo']
