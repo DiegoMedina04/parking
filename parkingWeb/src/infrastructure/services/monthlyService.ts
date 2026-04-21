@@ -81,5 +81,10 @@ export const monthlyService = {
   updateStatus: async (id: string, estado: MensualidadStatus) => {
     const response = await httpClient.patch(`/mensualidades/${id}`, { estado });
     return response.data;
+  },
+
+  processPayment: async (id: string, data: { valor: number, metodoPago: string, parqueaderoId: string }) => {
+    const response = await httpClient.post<{ status: string, message: string }>(`/mensualidades/${id}/pay`, data);
+    return response.data;
   }
 };

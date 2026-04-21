@@ -70,6 +70,7 @@ import { CreatePlanMensualidadUseCaseImpl } from '../../application/usecases/pla
 import { RetrievePlanMensualidadUseCaseImpl } from '../../application/usecases/planMensualidad/RetrievePlanMensualidadUseCaseImpl';
 import { CreateMensualidadUseCaseImpl } from '../../application/usecases/mensualidad/CreateMensualidadUseCaseImpl';
 import { RetrieveMensualidadUseCaseImpl } from '../../application/usecases/mensualidad/RetrieveMensualidadUseCaseImpl';
+import { ProcessMensualidadPaymentUseCaseImpl } from '../../application/usecases/mensualidad/ProcessMensualidadPaymentUseCaseImpl';
 import { UpdateTicketUseCaseImpl } from '../../application/usecases/ticket/UpdateTicketUseCaseImpl';
 
 // Services
@@ -276,7 +277,8 @@ export class DependencyInjection {
     
     const createUC = new CreateMensualidadUseCaseImpl(repo, feeRepo, vehicleRepo, parkingRepo);
     const retrieveUC = new RetrieveMensualidadUseCaseImpl(repo);
-    const service = new MensualidadService(createUC, retrieveUC);
+    const processPaymentUC = new ProcessMensualidadPaymentUseCaseImpl(repo);
+    const service = new MensualidadService(createUC, retrieveUC, processPaymentUC);
     return new MensualidadController(service);
   }
 }

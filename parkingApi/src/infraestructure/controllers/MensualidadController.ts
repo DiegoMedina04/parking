@@ -35,4 +35,18 @@ export class MensualidadController {
         const mensualidades = await this.mensualidadService.findByVehicleId(vehicleId);
         res.json(mensualidades);
     }
+
+    async pay(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const paymentData = {
+                ...req.body,
+                mensualidadId: id
+            };
+            await this.mensualidadService.processPayment(paymentData);
+            res.status(200).json({ status: 'success', message: 'Pago registrado y mensualidad actualizada correctamente' });
+        } catch (error: any) {
+            res.status(400).json({ status: 'error', message: error.message });
+        }
+    }
 }

@@ -20,6 +20,7 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { useAppStore } from '../../../application/store/appStore';
 import { monthlyService, type MensualidadDTO, type PlanMensualidadDTO, MensualidadStatus } from '../../../infrastructure/services/monthlyService';
 import { vehicleService, type VehicleDTO } from '../../../infrastructure/services/vehicleService';
+import { MensualidadPaymentModal } from '../../components/operator/MensualidadPaymentModal';
 
 // --- Modal Component ---
 const AddMensualidadModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, onClose: () => void, onSuccess: () => void }) => {
@@ -257,7 +258,25 @@ export const MensualidadesPage = () => {
   const [mensualidades, setMensualidades] = useState<MensualidadDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedMensualidad, setSelectedMensualidad] = useState<MensualidadDTO | null>(null);
   const { activeParkingId, activeParkingName } = useAppStore();
+
+  const handleOpenPayment = (m: MensualidadDTO) => {
+    setSelectedMensualidad(m);
+    setShowPaymentModal(true);
+  };
+
+  const handleProcessPayment = async (data: any) => {
+    if (!selectedMensualidad?.id) return;
+    try {
+      await monthlyService.processPayment(selectedMensualidad.id, data);
+      toast.success('Pago procesado correctamente');
+    } catch (error) {
+      toast.error('Error al procesar el pago');
+      throw error;
+    }
+  };
 
   const fetchMensualidades = async () => {
     if (!activeParkingId) return;
@@ -372,7 +391,8 @@ export const MensualidadesPage = () => {
                      <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Tipo</th>
                      <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Vigencia</th>
                      <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Estado</th>
-                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right last:rounded-tr-[2.5rem]">Monto</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Monto</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right last:rounded-tr-[2.5rem]">Acciones</th>
                    </tr>
                  </thead>
                  <tbody className="divide-y divide-slate-50">
@@ -418,6 +438,16 @@ export const MensualidadesPage = () => {
                              ${Number(m.plan?.valor).toLocaleString()}
                           </span>
                        </td>
+                        <td className="px-10 py-8 text-right">
+                           {m.estado === 'PENDIENTE' && (
+                              <button 
+                                 onClick={() => handleOpenPayment(m)}
+                                 className="bg-green-100 hover:bg-green-600 text-green-600 hover:text-white font-black px-4 py-2 rounded-xl text-[10px] uppercase tracking-widest transition-all active:scale-95"
+                              >
+                                 Registrar Pago
+                              </button>
+                           )}
+                        </td>
                      </tr>
                    ))}
                  </tbody>
@@ -439,6 +469,15 @@ export const MensualidadesPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSuccess={fetchMensualidades}
+      />
+
+      <MensualidadPaymentModal 
+        isOpen={showPaymentModal}
+        mensualidad={selectedMensualidad}
+        parqueaderoId={activeParkingId || ''}
+        onClose={() => setShowPaymentModal(false)}
+        onSuccess={fetchMensualidades}
+        onProcessPayment={handleProcessPayment}
       />
     </div>
   );

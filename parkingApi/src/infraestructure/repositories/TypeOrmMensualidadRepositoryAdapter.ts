@@ -52,4 +52,33 @@ export class TypeOrmMensualidadRepositoryAdapter implements MensualidadRepositor
     async delete(id: string): Promise<void> {
         await this.repository.delete(id);
     }
+
+    async processPayment(paymentData: any): Promise<void> {
+        const { mensualidadId, valor, metodoPago, parqueaderoId } = paymentData;
+
+        await AppDataSource.transaction(async transactionalEntityManager => {
+            // 1. Obtener mensualidad
+            const mensualidad = await transactionalEntityManager.findOne(MensualidadEntity, {
+                where: { id: mensualidadId },
+                relations: ['plan']
+            });
+
+            if (!mensualidad) throw new Error('Mensualidad no encontrada');
+            if (mensualidad.estado === 'PAGADA') throw new Error('La mensualidad ya se encuentra pagada');
+
+            // 2. Registrar Pago
+            const payment = transactionalEntityManager.create('MensualidadPaymentEntity', {
+                mensualidadId,
+                valor,
+                metodoPago,
+                parqueaderoId,
+                estado: 'PAGADO'
+            });
+            await transactionalEntityManager.save(payment);
+
+            // 3. Actualizar estado de Mensualidad a PAGADA
+            mensualidad.estado = 'PAGADA' as any;
+            await transactionalEntityManager.save(mensualidad);
+        });
+    }
 }
