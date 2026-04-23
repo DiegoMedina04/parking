@@ -15,6 +15,6 @@ export const globalExceptionHandler = (
   console.error('[GlobalErrorHandler] Unhandled error:', err);
   
   res.status(500).json({
-    errors: [{ message: 'Something went wrong' }]
+    errors: [{ message: err }]
   });
 };

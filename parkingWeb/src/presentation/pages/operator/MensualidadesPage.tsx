@@ -49,6 +49,17 @@ const AddMensualidadModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
   useEffect(() => {
     if (isOpen) {
       fetchVehicles();
+      const initialStart = new Date();
+      const initialEnd = new Date();
+      initialEnd.setMonth(initialEnd.getMonth() + 1);
+      
+      setFormData({
+        vehicleId: '',
+        planId: '',
+        startDate: initialStart.toISOString().split('T')[0],
+        endDate: initialEnd.toISOString().split('T')[0]
+      });
+      setAvailablePlans([]);
     }
   }, [isOpen]);
 

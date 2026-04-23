@@ -211,8 +211,8 @@ export const UsersPage = () => {
       {/* Modal Confirmación Borrado */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-6 z-50 animate-in fade-in duration-300">
-          <div className="bg-white w-full max-md rounded-[3rem] shadow-2xl p-12 text-center animate-in zoom-in-95 duration-300 border border-slate-100">
-            <div className="w-24 h-24 bg-red-50 text-red-500 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner">
+          <div className="bg-white w-full max-w-md rounded-[3rem] shadow-2xl p-10 text-center animate-in zoom-in-95 duration-300 border border-slate-100">
+            <div className="w-20 h-20 bg-red-50 text-red-500 rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
               <AlertCircle size={48} />
             </div>
             <h3 className="text-3xl font-black text-slate-800 mb-3 tracking-tighter">¿Inhabilitar Usuario?</h3>

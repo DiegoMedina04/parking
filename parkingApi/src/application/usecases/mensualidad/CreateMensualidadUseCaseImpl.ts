@@ -16,6 +16,7 @@ export class CreateMensualidadUseCaseImpl implements CreateMensualidadUseCase {
     ) {}
 
     async save(mensualidadData: any): Promise<Mensualidad> {
+        console.log({mensualidadData  })
         const planId = mensualidadData.planId || (mensualidadData.plan && mensualidadData.plan.id);
         const vehiculoId = mensualidadData.vehiculoId || (mensualidadData.vehiculo && mensualidadData.vehiculo.id);
         const parqueaderoId = mensualidadData.parqueaderoId || (mensualidadData.parqueadero && mensualidadData.parqueadero.id);

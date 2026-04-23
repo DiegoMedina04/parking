@@ -9,10 +9,10 @@ export class ClientEntity {
   @Column({ nullable: false })
   name!: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({  nullable: false })
   document!: string;
 
-  @Column({ unique: true, nullable: false })
+  @Column({  nullable: false })
   email!: string;
 
   @Column({ nullable: false })

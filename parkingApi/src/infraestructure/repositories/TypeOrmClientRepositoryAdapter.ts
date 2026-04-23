@@ -17,8 +17,8 @@ export class TypeOrmClientRepositoryAdapter implements ClientRepositoryPort {
     return entity ? entity.toDomainModel() : null;
   }
 
-  async findByDocument(document: string): Promise<Client | null> {
-    const entity = await this.clientRepository.findOne({ where: { document } });
+  async findByDocument(document: string, parqueadero_id: string): Promise<Client | null> {
+    const entity = await this.clientRepository.findOne({ where: { document, parqueadero_id } });
     return entity ? entity.toDomainModel() : null;
   }
 

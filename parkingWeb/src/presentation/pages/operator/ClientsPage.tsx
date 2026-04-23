@@ -58,8 +58,9 @@ export const ClientsPage = () => {
         toast.success('Cliente registrado con éxito');
       }
       fetchClients();
-    } catch (error) {
-      toast.error('Error al guardar cliente');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.errors?.[0]?.message || error.response?.data?.message || 'Error al guardar cliente';
+      toast.error(errorMessage);
       throw error;
     }
   };
