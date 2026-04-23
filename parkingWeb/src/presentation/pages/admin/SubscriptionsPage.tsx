@@ -12,7 +12,7 @@ import {
   Clock,
   CalendarDays
 } from 'lucide-react';
-import { subscriptionService, type SubscriptionDTO } from '../../../infrastructure/services/subscriptionService';
+import { subscriptionService, type SubscriptionPayload } from '../../../infrastructure/services/subscriptionService';
 import { planService } from '../../../infrastructure/services/planService';
 import { PageHeader } from '../../components/layout/PageHeader';
 import type { Subscription, SubscriptionStatus } from '../../../domain/models/Subscription';
@@ -31,7 +31,9 @@ export const SubscriptionsPage = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
-  const [formData, setFormData] = useState<SubscriptionDTO>({
+  
+  // State for form binding only
+  const [formData, setFormData] = useState({
     parkingId: '',
     planId: '',
     startDate: new Date().toISOString().split('T')[0],
@@ -87,10 +89,26 @@ export const SubscriptionsPage = () => {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const selectedParking = parkings.find(p => p.id === formData.parkingId);
+      const selectedPlan = plans.find(p => p.id === formData.planId);
+
+      if (!selectedParking || !selectedPlan) {
+        alert('Por favor selecciona parqueadero y plan');
+        return;
+      }
+
+      const payload: SubscriptionPayload = {
+        parking: selectedParking,
+        plan: selectedPlan,
+        startDate: formData.startDate,
+        endDate: formData.endDate || undefined,
+        status: formData.status
+      };
+
       if (selectedSub) {
-        await subscriptionService.updateSubscription(selectedSub.id, formData);
+        await subscriptionService.updateSubscription(selectedSub.id, payload);
       } else {
-        await subscriptionService.saveSubscription(formData);
+        await subscriptionService.saveSubscription(payload);
       }
       setShowModal(false);
       fetchInitialData();
@@ -102,13 +120,14 @@ export const SubscriptionsPage = () => {
   const toggleStatus = async (sub: Subscription) => {
     const newStatus: SubscriptionStatus = sub.status === 'ACTIVA' ? 'SUSPENDIDA' : 'ACTIVA';
     try {
-      await subscriptionService.updateSubscription(sub.id, {
-        parkingId: sub.parking.id,
-        planId: sub.plan.id || '',
+      const payload: SubscriptionPayload = {
+        parking: sub.parking,
+        plan: sub.plan,
         startDate: sub.startDate.toString(),
-        endDate: sub.endDate?.toString() || '',
+        endDate: sub.endDate?.toString(),
         status: newStatus
-      });
+      };
+      await subscriptionService.updateSubscription(sub.id, payload);
       fetchInitialData();
     } catch (error) {
       alert('Error al cambiar estado');

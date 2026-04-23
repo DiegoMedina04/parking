@@ -20,9 +20,18 @@ export class TypeOrmSubscriptionRepositoryAdapter implements SubscriptionReposit
   }
 
   async save(subscription: Subscription): Promise<Subscription> {
+    console.log({subscription});
+    console.log('parking ', subscription.parking)
+    console.log('plan ', subscription.plan)
     const entity = SubscriptionEntity.fromDomainModel(subscription);
+    console.log({entity});
     const savedEntity = await this.subscriptionRepository.save(entity);
-    return savedEntity.toDomainModel();
+    console.log({savedEntity});
+    
+    const result = savedEntity.toDomainModel();
+    console.log({result});
+    
+    return result;
   }
 
   async update(subscription: Subscription): Promise<Subscription> {

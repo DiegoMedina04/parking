@@ -71,13 +71,13 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       label: 'Tipos de Vehículo',
       path: '/tipos-vehiculos',
       icon: <CarFront size={22} />,
-      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+      roles: [ROLES.OPERATOR]
     },
     {
       label: 'Tarifas',
       path: '/tarifas',
       icon: <DollarSign size={22} />,
-      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+      roles: [ ROLES.OPERATOR]
     },
     {
       label: 'Mis Parqueaderos',
@@ -113,19 +113,19 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileMenuOpen, setIsMo
       label: 'Cierre de Caja',
       path: '/reporte-pagos',
       icon: <TrendingUp size={22} />,
-      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+      roles: [ ROLES.OPERATOR]
     },
     {
       label: 'Mensualidades',
       path: '/mensualidades',
       icon: <Calendar size={22} />,
-      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+      roles: [ROLES.OPERATOR]
     },
     {
       label: 'Reporte de Pagos',
       path: '/recaudos',
       icon: <Receipt size={22} />,
-      roles: [ROLES.ADMIN, ROLES.OPERATOR]
+      roles: [ROLES.OPERATOR]
     }
   ].filter(item => user && item.roles.includes(user.role as any));
 
