@@ -2,9 +2,13 @@ import { Request, Response } from 'express';
 import { ParkingService } from '../../application/services/ParkingService';
 import { Parking } from '../../domain/models/Parking';
 import { ROLES } from '../../domain/constants/roles';
+import { SubscriptionRepositoryPort } from '../../domain/ports/out/SubscriptionRepositoryPort';
 
 export class ParkingController {
-  constructor(private readonly parkingService: ParkingService) {}
+  constructor(
+    private readonly parkingService: ParkingService,
+    private readonly subscriptionRepository: SubscriptionRepositoryPort
+  ) {}
 
   async findAll(req: Request, res: Response): Promise<void> {
     try {
@@ -17,7 +21,40 @@ export class ParkingController {
         parkings = await this.parkingService.getParkings();
       }
 
-      res.status(200).json({ status: 'success', data: parkings });
+      // Mapear los parqueaderos para limpiar datos sensibles y calcular is_active
+      const mappedParkings = await Promise.all(
+        parkings.map(async (p) => {
+          let is_active = false;
+          const subscription = await this.subscriptionRepository.findLatestActiveByParkingId(p.id);
+
+          if (subscription) {
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            let isExpired = false;
+            if (subscription.endDate) {
+              const endDate = new Date(subscription.endDate);
+              endDate.setHours(23, 59, 59, 999);
+              if (currentDate > endDate) {
+                isExpired = true;
+              }
+            }
+
+            if (!isExpired) {
+              is_active = true;
+            }
+          }
+
+          return {
+            id: p.id,
+            name: p.name,
+            address: p.address,
+            is_active
+          };
+        })
+      );
+
+      res.status(200).json({ status: 'success', data: mappedParkings });
     } catch (error: any) {
       res.status(500).json({ status: 'error', message: error.message });
     }

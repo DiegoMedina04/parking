@@ -153,12 +153,13 @@ export class DependencyInjection {
   static getParkingController(): ParkingController {
     const repo = new TypeOrmParkingRepositoryAdapter(AppDataSource.getRepository(ParkingEntity));
     const userRepo = new TypeOrmUserRepositoryAdapter(AppDataSource.getRepository(UserEntity));
+    const subscriptionRepo = new TypeOrmSubscriptionRepositoryAdapter(AppDataSource.getRepository(SubscriptionEntity));
     const createUC = new CreateParkingUseCaseImpl(repo, userRepo);
     const retrieveUC = new RetrieveParkingUseCaseImpl(repo);
     const updateUC = new UpdateParkingUseCaseImpl(repo);
     const deleteUC = new DeleteParkingUseCaseImpl(repo);
     const service = new ParkingService(retrieveUC, createUC, updateUC, deleteUC);
-    return new ParkingController(service);
+    return new ParkingController(service, subscriptionRepo);
   }
 
   static getTicketController(): TicketController {
