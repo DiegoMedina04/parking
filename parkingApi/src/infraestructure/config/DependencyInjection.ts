@@ -205,13 +205,14 @@ export class DependencyInjection {
     // Repositorios
     const userRepo = new TypeOrmUserRepositoryAdapter(AppDataSource.getRepository(UserEntity));
     const roleRepo = new TypeOrmRoleRepositoryAdapter(AppDataSource.getRepository(RoleEntity));
+    const subscriptionRepository = new TypeOrmSubscriptionRepositoryAdapter(AppDataSource.getRepository(SubscriptionEntity));
     
     // Providers
     const passwordHasher = new BcryptPasswordHasherAdapter();
     const jwtGenerator = new JwtGeneratorAdapter();
     
-    // Casos de uso
-    const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator);
+    // Casos de uso / Auth
+    const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator, subscriptionRepository);
     const signupUC = new SignupUseCaseImpl(userRepo, roleRepo, passwordHasher);
     
     // Servicio

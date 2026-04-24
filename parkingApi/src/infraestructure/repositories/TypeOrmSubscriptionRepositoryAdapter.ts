@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { Subscription } from '../../domain/models/Subscription';
 import { SubscriptionRepositoryPort } from '../../domain/ports/out/SubscriptionRepositoryPort';
 import { SubscriptionEntity } from '../entities/SubscriptionEntity';
+import { SubscriptionStatus } from '../../domain/models/SubscriptionStatus';
 
 export class TypeOrmSubscriptionRepositoryAdapter implements SubscriptionRepositoryPort {
   constructor(private readonly subscriptionRepository: Repository<SubscriptionEntity>) {}
@@ -15,6 +16,20 @@ export class TypeOrmSubscriptionRepositoryAdapter implements SubscriptionReposit
     const entity = await this.subscriptionRepository.findOne({ 
       where: { id }, 
       relations: ['parking', 'plan'] 
+    });
+    return entity ? entity.toDomainModel() : null;
+  }
+
+  async findLatestActiveByParkingId(parkingId: string): Promise<Subscription | null> {
+    const entity = await this.subscriptionRepository.findOne({
+      where: {
+        parking: { id: parkingId },
+        status: SubscriptionStatus.ACTIVA
+      },
+      order: {
+        endDate: 'DESC'
+      },
+      relations: ['parking', 'plan']
     });
     return entity ? entity.toDomainModel() : null;
   }
