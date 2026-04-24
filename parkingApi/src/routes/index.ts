@@ -32,8 +32,10 @@ router.get('/health', (req: Request, res: Response) => {
 router.use('/auth', (req, res, next) => createAuthRouter(DependencyInjection.getAuthController())(req, res, next));
 
 // Proteger todas las rutas siguientes con JWT
-// Proteger todas las rutas siguientes con JWT
 router.use(jwtValidationMiddleware);
+
+import { validateActiveSubscription } from '../infraestructure/middleware/ValidateActiveSubscriptionMiddleware';
+router.use(validateActiveSubscription);
 
 // Domain routes
 router.use('/user', (req, res, next) => createUserRouter(DependencyInjection.getUserController())(req, res, next));
