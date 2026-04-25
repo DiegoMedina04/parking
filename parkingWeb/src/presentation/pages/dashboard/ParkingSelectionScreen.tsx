@@ -29,6 +29,14 @@ export const ParkingSelectionScreen = () => {
   }, []);
 
   const handleSelect = (parking: ParkingDTO) => {
+    if (parking.is_active === false) {
+      toast.error('Esta sede tiene la suscripción vencida. Por favor, actívala en la gestión de parqueaderos.', {
+        duration: 4000,
+        icon: '⚠️'
+      });
+      return;
+    }
+    
     if (parking.id) {
       setActiveParking(parking.id, parking.name);
     }
@@ -65,25 +73,47 @@ export const ParkingSelectionScreen = () => {
               <div 
                 key={parking.id} 
                 onClick={() => handleSelect(parking)}
-                className="bg-white p-8 rounded-[3rem] border-2 border-transparent hover:border-blue-500 shadow-sm hover:shadow-2xl hover:shadow-blue-100 transition-all cursor-pointer group flex flex-col relative overflow-hidden"
+                className={`
+                  p-8 rounded-[3rem] border-2 transition-all relative overflow-hidden flex flex-col
+                  ${parking.is_active === false 
+                    ? 'bg-slate-100 border-transparent opacity-60 grayscale cursor-not-allowed' 
+                    : 'bg-white border-transparent hover:border-blue-500 shadow-sm hover:shadow-2xl hover:shadow-blue-100 cursor-pointer group'}
+                `}
               >
-                <div className="absolute -right-4 -bottom-4 text-slate-50 group-hover:text-blue-50 group-hover:scale-110 transition-all duration-500">
+                <div className={`absolute -right-4 -bottom-4 transition-all duration-500 ${parking.is_active === false ? 'text-slate-200' : 'text-slate-50 group-hover:text-blue-50 group-hover:scale-110'}`}>
                   <Building2 size={120} />
                 </div>
                 
-                <div className="relative z-10">
-                  <h3 className="text-3xl font-black text-slate-800 tracking-tighter mb-3 uppercase italic group-hover:text-blue-600 transition-colors">
+                <div className="relative z-10 flex-1 flex flex-col">
+                  {parking.is_active === false && (
+                    <div className="mb-4">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                        Suscripción Vencida
+                      </span>
+                    </div>
+                  )}
+                  <h3 className={`text-3xl font-black tracking-tighter mb-3 uppercase italic transition-colors ${parking.is_active === false ? 'text-slate-400' : 'text-slate-800 group-hover:text-blue-600'}`}>
                     {parking.name}
                   </h3>
-                  <div className="flex items-center gap-2 text-slate-400 font-bold mb-8">
+                  <div className={`flex items-center gap-2 font-bold mb-8 ${parking.is_active === false ? 'text-slate-300' : 'text-slate-400'}`}>
                     <MapPin size={18} />
                     <span>{parking.address}</span>
                   </div>
 
-                  <button className="flex items-center gap-3 text-blue-600 font-black tracking-widest text-sm uppercase group-hover:translate-x-2 transition-transform">
-                    Ingresar
-                    <ArrowRight size={18} />
-                  </button>
+                  <div className="mt-auto">
+                    <button 
+                      disabled={parking.is_active === false}
+                      className={`flex items-center gap-3 font-black tracking-widest text-sm uppercase transition-all
+                        ${parking.is_active === false 
+                          ? 'text-slate-300 cursor-not-allowed' 
+                          : 'text-blue-600 group-hover:translate-x-2'}
+                      `}
+                    >
+                      Ingresar
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

@@ -4,7 +4,7 @@ export interface ParkingDTO {
   id?: string;
   name: string;
   address: string;
-  user?: { id: string };
+  is_active?: boolean;
 }
 
 export const parkingService = {

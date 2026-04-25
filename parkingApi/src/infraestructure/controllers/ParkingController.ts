@@ -21,7 +21,6 @@ export class ParkingController {
         parkings = await this.parkingService.getParkings();
       }
 
-      // Mapear los parqueaderos para limpiar datos sensibles y calcular is_active
       const mappedParkings = await Promise.all(
         parkings.map(async (p) => {
           let is_active = false;

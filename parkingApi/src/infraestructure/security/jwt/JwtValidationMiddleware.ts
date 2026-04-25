@@ -20,9 +20,9 @@ export const jwtValidationMiddleware = (req: Request, res: Response, next: NextF
   } catch (error) {
     console.log({error});
     
-    res.status(403).json({
+    res.status(401).json({
       error: error instanceof Error ? error.message : 'Unknown error',
-      message: 'el token no es valido!',
+      message: 'el token no es valido o ha expirado!',
     });
   }
 };
