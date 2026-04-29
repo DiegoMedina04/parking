@@ -109,6 +109,7 @@ export const LoginPage = () => {
                   placeholder="ejemplo@parking.com"
                   className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-8 py-5 outline-none font-bold text-slate-700 shadow-sm focus:shadow-md focus:border-blue-100 transition-all placeholder:text-slate-300"
                   value={email}
+                  name='email'
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                   required

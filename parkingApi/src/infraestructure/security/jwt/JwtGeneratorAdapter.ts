@@ -8,7 +8,7 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
 
     constructor() {
         this.secret = process.env.JWT_SECRET || 'secret_key_placeholder';
-        this.expiresIn = process.env.JWT_EXPIRES_IN || '2m';
+        this.expiresIn = process.env.JWT_EXPIRES_IN || '20m';
     }
 
     generateToken(user: User): string {

@@ -17,6 +17,9 @@ import { useAppStore } from '../../../application/store/appStore';
 import { ticketService, type TicketDTO, TicketStatus } from '../../../infrastructure/services/ticketService';
 import { TicketFormModal } from '../../components/operator/TicketFormModal';
 import { CheckoutModal } from '../../components/operator/CheckoutModal';
+import { useCapacity } from '../../../application/hooks/useCapacity';
+import { AlertCircle } from 'lucide-react';
+
 
 // Hook para el cronómetro en vivo
 const ElapsedTime = ({ entryDate }: { entryDate: string }) => {
@@ -55,6 +58,8 @@ export const OperationsPage = () => {
   const [selectedTicket, setSelectedTicket] = useState<TicketDTO | null>(null);
   
   const { activeParkingId, activeParkingName } = useAppStore();
+  const { isFull, current, max, refreshCapacity } = useCapacity();
+
 
   const fetchTickets = async () => {
     try {
@@ -92,6 +97,7 @@ export const OperationsPage = () => {
       );
       toast.success(`Pago registrado: ${selectedTicket.vehicle?.licensePlate}`);
       fetchTickets();
+      refreshCapacity();
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al procesar salida');
       throw error; // Propagar para que el modal maneje el loading
@@ -132,15 +138,29 @@ export const OperationsPage = () => {
           title="Patio Activo"
           subtitle={activeParkingName ? `Gestionando: ${activeParkingName}` : 'Panel de operación general.'}
           action={
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-green-500 hover:bg-green-600 text-white font-black px-10 py-5 rounded-[2.2rem] shadow-2xl shadow-green-100 transition-all flex items-center justify-center gap-3 transform active:scale-95 text-lg uppercase tracking-tight"
-            >
-              <Plus size={24} />
-              Registrar Entrada
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                disabled={isFull}
+                className={`${
+                  isFull 
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' 
+                    : 'bg-green-500 hover:bg-green-600 text-white shadow-2xl shadow-green-100'
+                } font-black px-10 py-5 rounded-[2.2rem] transition-all flex items-center justify-center gap-3 transform active:scale-95 text-lg uppercase tracking-tight`}
+              >
+                <Plus size={24} />
+                Registrar Entrada
+              </button>
+              {isFull && (
+                <div className="flex items-center gap-2 text-rose-500 font-black text-xs uppercase tracking-tighter animate-pulse">
+                  <AlertCircle size={14} />
+                  Capacidad Máxima Alcanzada ({current}/{max})
+                </div>
+              )}
+            </div>
           }
         />
+
 
         <div className="bg-white rounded-[3.5rem] shadow-sm border border-slate-100 p-8 lg:p-12">
           {/* Buscador y Metrica rapida */}

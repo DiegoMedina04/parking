@@ -3,12 +3,16 @@ import { ParkingService } from '../../application/services/ParkingService';
 import { Parking } from '../../domain/models/Parking';
 import { ROLES } from '../../domain/constants/roles';
 import { SubscriptionRepositoryPort } from '../../domain/ports/out/SubscriptionRepositoryPort';
+import { CapacityService } from '../../application/services/CapacityService';
+
 
 export class ParkingController {
   constructor(
     private readonly parkingService: ParkingService,
-    private readonly subscriptionRepository: SubscriptionRepositoryPort
+    private readonly subscriptionRepository: SubscriptionRepositoryPort,
+    private readonly capacityService: CapacityService
   ) {}
+
 
   async findAll(req: Request, res: Response): Promise<void> {
     try {
@@ -95,4 +99,15 @@ export class ParkingController {
       res.status(500).json({ status: 'error', message: error.message });
     }
   }
+
+  async getCapacity(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id as string;
+      const capacity = await this.capacityService.getCapacity(id);
+      res.status(200).json({ status: 'success', data: capacity });
+    } catch (error: any) {
+      res.status(500).json({ status: 'error', message: error.message });
+    }
+  }
 }
+

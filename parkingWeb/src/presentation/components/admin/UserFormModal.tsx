@@ -159,6 +159,8 @@ export const UserFormModal = ({ isOpen, onClose, onSave, selectedUser, roles, is
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
               <input 
                 type="email" required
+                name="email" 
+                autoComplete='email'
                 className="w-full bg-slate-50 border border-slate-100 focus:border-blue-200 rounded-2xl pl-12 pr-4 py-4 outline-none text-slate-700 font-bold text-sm transition-all lowercase"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}

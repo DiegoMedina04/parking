@@ -16,6 +16,10 @@ import { useEffect, useState } from 'react';
 import { parkingService } from '../../../infrastructure/services/parkingService';
 import { monthlyService, type MensualidadDTO } from '../../../infrastructure/services/monthlyService';
 import { toast } from 'react-hot-toast';
+import { httpClient } from '../../../infrastructure/http/httpClient';
+import { CapacityMeter } from '../../components/dashboard/CapacityMeter';
+
+
 
 export const DashboardPage = () => {
   const user = useAuthStore((state) => state.user);
@@ -24,6 +28,8 @@ export const DashboardPage = () => {
   const [parkingCount, setParkingCount] = useState(0);
   const [monthlyCount, setMonthlyCount] = useState(0);
   const [expiringSoon, setExpiringSoon] = useState<MensualidadDTO[]>([]);
+  const [capacity, setCapacity] = useState({ current: user?.current_places || 0, max: user?.max_places || 0 });
+
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -45,6 +51,14 @@ export const DashboardPage = () => {
                 return diffDays >= 0 && diffDays <= 3;
              });
              setExpiringSoon(soon);
+          }
+
+          // Fetch capacity
+          if (activeParkingId) {
+            const capResponse = await httpClient.get(`/parqueadero/${activeParkingId}/capacity`);
+            if (capResponse.data.status === 'success') {
+              setCapacity(capResponse.data.data);
+            }
           }
         } catch (error) {
           console.error("Error fetching stats", error);
@@ -152,7 +166,14 @@ export const DashboardPage = () => {
               </div>
             </div>
           </div>
+
+          {!isAdmin && activeParkingId && (
+            <div className="lg:col-span-2">
+              <CapacityMeter current={capacity.current} max={capacity.max} />
+            </div>
+          )}
         </div>
+
 
         {/* Sección de Accesos Rápidos / Actividad */}
         <div className="grid lg:grid-cols-3 gap-10">

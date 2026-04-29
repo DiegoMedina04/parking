@@ -25,21 +25,29 @@ export class ParkingEntity {
     entity.id = parking.id;
     entity.name = parking.name;
     entity.address = parking.address;
-    
+
     if (parking.user) {
       entity.user = UserEntity.fromDomainModel(parking.user);
     }
-    
+
     return entity;
   }
 
   toDomainModel(): Parking {
-    return new Parking(
+    const parkingDomain = new Parking(
       this.id,
       this.name,
       this.address,
-      undefined, // subscriptions
+      [], // Initialized empty
       this.user?.toDomainModel()
     );
+
+    if (this.subscription) {
+      (parkingDomain as any).subscription = this.subscription.map(s => 
+        s.toDomainModel(parkingDomain)
+      );
+    }
+
+    return parkingDomain;
   }
 }

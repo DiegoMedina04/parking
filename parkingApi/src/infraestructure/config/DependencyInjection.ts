@@ -74,6 +74,8 @@ import { RetrieveMensualidadUseCaseImpl } from '../../application/usecases/mensu
 import { ProcessMensualidadPaymentUseCaseImpl } from '../../application/usecases/mensualidad/ProcessMensualidadPaymentUseCaseImpl';
 import { GetPaymentSummaryUseCaseImpl } from '../../application/usecases/mensualidad/GetPaymentSummaryUseCaseImpl';
 import { UpdateTicketUseCaseImpl } from '../../application/usecases/ticket/UpdateTicketUseCaseImpl';
+import { GetCapacityUseCaseImpl } from '../../application/usecases/capacity/GetCapacityUseCaseImpl';
+
 
 // Services
 import { UserService } from '../../application/services/UserService';
@@ -89,6 +91,8 @@ import { TicketPaymentService } from '../../application/services/TicketPaymentSe
 import { PlanMensualidadService } from '../../application/services/PlanMensualidadService';
 import { MensualidadService } from '../../application/services/MensualidadService';
 import { AuthService } from '../../application/services/AuthService';
+import { CapacityService } from '../../application/services/CapacityService';
+
 
 // Security / Adapters
 import { BcryptPasswordHasherAdapter } from '../security/BcryptPasswordHasherAdapter';
@@ -159,7 +163,9 @@ export class DependencyInjection {
     const updateUC = new UpdateParkingUseCaseImpl(repo);
     const deleteUC = new DeleteParkingUseCaseImpl(repo);
     const service = new ParkingService(retrieveUC, createUC, updateUC, deleteUC);
-    return new ParkingController(service, subscriptionRepo);
+    const capacityService = this.getCapacityService();
+    return new ParkingController(service, subscriptionRepo, capacityService);
+
   }
 
   static getTicketController(): TicketController {
@@ -213,13 +219,19 @@ export class DependencyInjection {
     const jwtGenerator = new JwtGeneratorAdapter();
     
     // Casos de uso / Auth
-    const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator, subscriptionRepository);
+    const ticketRepo = new TypeOrmTicketRepositoryAdapter(AppDataSource.getRepository(TicketEntity));
+    const mensualidadRepo = new TypeOrmMensualidadRepositoryAdapter();
+    const parkingRepo = new TypeOrmParkingRepositoryAdapter(AppDataSource.getRepository(ParkingEntity));
+    const getCapacityUC = new GetCapacityUseCaseImpl(ticketRepo, mensualidadRepo, parkingRepo);
+
+    const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator, subscriptionRepository, getCapacityUC);
     const signupUC = new SignupUseCaseImpl(userRepo, roleRepo, passwordHasher);
     
     // Servicio
     const authService = new AuthService(loginUC, signupUC);
     
     return new AuthController(authService);
+
   }
 
   static getClientController(): ClientController {
@@ -287,4 +299,13 @@ export class DependencyInjection {
     const service = new MensualidadService(createUC, retrieveUC, processPaymentUC, getPaymentSummaryUC);
     return new MensualidadController(service);
   }
+
+  static getCapacityService(): CapacityService {
+    const ticketRepo = new TypeOrmTicketRepositoryAdapter(AppDataSource.getRepository(TicketEntity));
+    const mensualidadRepo = new TypeOrmMensualidadRepositoryAdapter();
+    const parkingRepo = new TypeOrmParkingRepositoryAdapter(AppDataSource.getRepository(ParkingEntity));
+    const getCapacityUC = new GetCapacityUseCaseImpl(ticketRepo, mensualidadRepo, parkingRepo);
+    return new CapacityService(getCapacityUC);
+  }
 }
+

@@ -13,16 +13,23 @@ export interface LoginResult {
         role?: string;
         parqueadero_id?: string;
         is_subscription_active: boolean;
+        max_places?: number;
+        current_places?: number;
     };
 }
+
+
+import { GetCapacityUseCase } from '../../../domain/ports/in/capacity/GetCapacityUseCase';
 
 export class LoginUseCaseImpl {
     constructor(
         private readonly userRepository: UserRepositoryPort,
         private readonly passwordHasher: PasswordHasherPort,
         private readonly jwtGenerator: JwtGeneratorPort,
-        private readonly subscriptionRepository: SubscriptionRepositoryPort
+        private readonly subscriptionRepository: SubscriptionRepositoryPort,
+        private readonly getCapacityUseCase: GetCapacityUseCase
     ) {}
+
 
     async execute(email: string, passwordPlain: string): Promise<LoginResult | null> {
         const user = await this.userRepository.findByEmail(email);
@@ -40,9 +47,16 @@ export class LoginUseCaseImpl {
         const token = this.jwtGenerator.generateToken(user);
         
         const parqueadero_id = user.parking && user.parking.length > 0 ? user.parking[0].id : undefined;
-        let is_subscription_active = true; // Por defecto true para SuperAdmins sin parqueadero
+        let max_places = 0;
+        let current_places = 0;
+        let is_subscription_active = true;
+
 
         if (parqueadero_id) {
+            const capacity = await this.getCapacityUseCase.getCapacity(parqueadero_id);
+            max_places = capacity.max;
+            current_places = capacity.current;
+
             is_subscription_active = false;
             const subscription = await this.subscriptionRepository.findLatestActiveByParkingId(parqueadero_id);
 
@@ -50,12 +64,9 @@ export class LoginUseCaseImpl {
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
 
-                let isExpired = false;
-                
-                if(subscription.startDate<= currentDate && subscription.endDate>= currentDate ){
+                if(subscription.startDate <= currentDate && subscription.endDate >= currentDate ){
                     is_subscription_active = true;
                 }
-               
             }
         }
         
@@ -67,8 +78,11 @@ export class LoginUseCaseImpl {
                 email: user.email || '',
                 role: user.role?.name,
                 parqueadero_id,
-                is_subscription_active
+                is_subscription_active,
+                max_places,
+                current_places
             }
         };
+
     }
 }

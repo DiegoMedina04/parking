@@ -3,6 +3,7 @@ import { Subscription } from '../../domain/models/Subscription';
 import { SubscriptionStatus } from '../../domain/models/SubscriptionStatus';
 import { ParkingEntity } from './ParkingEntity';
 import { PlanEntity } from './PlanEntity';
+import { Parking } from '../../domain/models/Parking';
 
 @Entity('suscripciones')
 export class SubscriptionEntity {
@@ -42,11 +43,11 @@ export class SubscriptionEntity {
     return entity;
   }
 
-  toDomainModel(): Subscription {
+  toDomainModel(parkingModel?: Parking): Subscription {
     return new Subscription(
       this.id,
-      this.parking.toDomainModel(),
-      this.plan.toDomainModel(),
+      parkingModel || (this.parking ? this.parking.toDomainModel() : null as any),
+      this.plan ? this.plan.toDomainModel() : null as any,
       this.startDate,
       this.endDate,
       this.status

@@ -6,4 +6,7 @@ export interface User {
   email: string;
   role?: UserRole;
   parqueadero_id?: string;
+  max_places?: number;
+  current_places?: number;
 }
+

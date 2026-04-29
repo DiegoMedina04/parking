@@ -4,7 +4,7 @@ import { ParkingRepositoryPort } from '../../domain/ports/out/ParkingRepositoryP
 import { ParkingEntity } from '../entities/ParkingEntity';
 
 export class TypeOrmParkingRepositoryAdapter implements ParkingRepositoryPort {
-  constructor(private readonly parkingRepository: Repository<ParkingEntity>) {}
+  constructor(private readonly parkingRepository: Repository<ParkingEntity>) { }
 
   async findAll(): Promise<Parking[]> {
     const entities = await this.parkingRepository.find({ relations: ['user', 'subscription'] });
@@ -12,9 +12,9 @@ export class TypeOrmParkingRepositoryAdapter implements ParkingRepositoryPort {
   }
 
   async findById(id: string): Promise<Parking | null> {
-    const entity = await this.parkingRepository.findOne({ 
-      where: { id }, 
-      relations: ['user', 'subscription'] 
+    const entity = await this.parkingRepository.findOne({
+      where: { id },
+      relations: ['user', 'subscription', 'subscription.plan']
     });
     return entity ? entity.toDomainModel() : null;
   }

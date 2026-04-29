@@ -21,6 +21,8 @@ import { useAppStore } from '../../../application/store/appStore';
 import { monthlyService, type MensualidadDTO, type PlanMensualidadDTO, MensualidadStatus } from '../../../infrastructure/services/monthlyService';
 import { vehicleService, type VehicleDTO } from '../../../infrastructure/services/vehicleService';
 import { MensualidadPaymentModal } from '../../components/operator/MensualidadPaymentModal';
+import { useCapacity } from '../../../application/hooks/useCapacity';
+
 
 // --- Modal Component ---
 const AddMensualidadModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, onClose: () => void, onSuccess: () => void }) => {
@@ -272,6 +274,8 @@ export const MensualidadesPage = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedMensualidad, setSelectedMensualidad] = useState<MensualidadDTO | null>(null);
   const { activeParkingId, activeParkingName } = useAppStore();
+  const { isFull, current, max, refreshCapacity } = useCapacity();
+
 
   const handleOpenPayment = (m: MensualidadDTO) => {
     setSelectedMensualidad(m);
@@ -295,7 +299,9 @@ export const MensualidadesPage = () => {
       setLoading(true);
       const data = await monthlyService.getMensualidadesByParking(activeParkingId);
       setMensualidades(data);
+      refreshCapacity();
     } catch (error) {
+
       toast.error('Error al cargar mensualidades');
     } finally {
       setLoading(false);
@@ -340,15 +346,29 @@ export const MensualidadesPage = () => {
           title="Mensualidades"
           subtitle={`Gestión de clientes fijos en ${activeParkingName}`}
           action={
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-black px-10 py-5 rounded-[2.2rem] shadow-2xl transition-all flex items-center justify-center gap-3 transform active:scale-95 text-lg uppercase tracking-tight"
-            >
-              <Plus size={24} />
-              Nueva Mensualidad
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                disabled={isFull}
+                className={`${
+                  isFull 
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' 
+                    : 'bg-slate-900 hover:bg-slate-800 text-white shadow-2xl'
+                } font-black px-10 py-5 rounded-[2.2rem] transition-all flex items-center justify-center gap-3 transform active:scale-95 text-lg uppercase tracking-tight`}
+              >
+                <Plus size={24} />
+                Nueva Mensualidad
+              </button>
+              {isFull && (
+                <div className="flex items-center gap-2 text-rose-500 font-black text-xs uppercase tracking-tighter animate-pulse">
+                  <AlertCircle size={14} />
+                  Capacidad Máxima Alcanzada ({current}/{max})
+                </div>
+              )}
+            </div>
           }
         />
+
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
