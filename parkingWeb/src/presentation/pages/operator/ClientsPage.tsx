@@ -223,24 +223,6 @@ export const ClientsPage = () => {
           </div>
         </div>
 
-        {/* Action Suggestion */}
-        <div className="bg-slate-900 rounded-[2.8rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-           <div className="absolute top-0 right-0 p-10 opacity-10">
-              <UserPlus size={100} className="text-white" />
-           </div>
-           <div className="relative z-10">
-              <h3 className="text-3xl font-black text-white tracking-tighter italic">¿Vehículo en fila?</h3>
-              <p className="text-slate-400 font-bold mt-2">Registra al cliente y luego asocia su vehículo en segundos.</p>
-           </div>
-           <button 
-             onClick={() => setIsModalOpen(true)}
-             className="relative z-10 bg-white text-slate-900 font-black px-10 py-5 rounded-[2rem] hover:bg-blue-50 transition-all flex items-center gap-3 group"
-           >
-              Iniciar Flujo Rápido
-              <Plus size={20} className="group-hover:rotate-90 transition-transform" />
-           </button>
-        </div>
-
       </div>
 
       <ClientFormModal 

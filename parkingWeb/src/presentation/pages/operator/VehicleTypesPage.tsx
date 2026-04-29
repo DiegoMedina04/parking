@@ -153,31 +153,6 @@ export const VehicleTypesPage = () => {
           </div>
         )}
 
-        {/* Info Card */}
-        <div className="bg-blue-600 rounded-[3rem] p-12 text-white relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
-           <div className="absolute -bottom-10 -right-10 opacity-10">
-              <CloudLightning size={240} />
-           </div>
-           <div className="flex-1 space-y-4 relative z-10">
-              <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest">
-                 <Sparkles size={14} /> Tips de Operación
-              </div>
-              <h4 className="text-4xl font-black tracking-tighter italic">Estandariza tu Inventario</h4>
-              <p className="text-blue-100 font-bold max-w-xl text-lg opacity-80 leading-relaxed">
-                Tener tipos de vehículos claros te permite generar reportes precisos sobre qué tipo de clientes frecuentan más tus sedes y ajustar tus tarifas de forma inteligente.
-              </p>
-           </div>
-           <div className="w-full md:w-auto relative z-10">
-               <div className="bg-white/10 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/20">
-                  <p className="text-blue-200 font-black text-xs uppercase tracking-widest mb-4">Ejemplos Comunes</p>
-                  <ul className="space-y-3 font-bold">
-                     <li className="flex items-center gap-3"><div className="w-2 h-2 bg-white rounded-full" /> Sedán / Automóvil</li>
-                     <li className="flex items-center gap-3"><div className="w-2 h-2 bg-white rounded-full" /> Motocicleta &lt; 250cc</li>
-                     <li className="flex items-center gap-3"><div className="w-2 h-2 bg-white rounded-full" /> Suv / Camioneta</li>
-                  </ul>
-               </div>
-           </div>
-        </div>
 
       </div>
 
