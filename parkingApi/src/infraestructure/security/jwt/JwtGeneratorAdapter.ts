@@ -8,7 +8,7 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
 
     constructor() {
         this.secret = process.env.JWT_SECRET || 'secret_key_placeholder';
-        this.expiresIn = process.env.JWT_EXPIRES_IN || '20m';
+        this.expiresIn = process.env.JWT_EXPIRES_IN || '1m';
     }
 
     generateToken(user: User): string {
@@ -18,7 +18,7 @@ export class JwtGeneratorAdapter implements JwtGeneratorPort {
             role: user.role?.name
         };
         const options: SignOptions = { expiresIn: this.expiresIn as any };
-        
+
         return jwt.sign(payload, this.secret, options);
     }
 }
