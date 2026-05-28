@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // La URL base puede venir de .env en el futuro (ej. import.meta.env.VITE_API_URL)
-const API_URL = 'http://localhost:8080/api';
+// const API_URL = 'http://localhost:8080/api';
+const API_URL = 'https://api.diegomedinadev.com/api';
 
 export const httpClient = axios.create({
   baseURL: API_URL,
