@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { AuthService } from '../../application/services/AuthService';
 
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
-      
+
       if (!email || !password) {
         res.status(400).json({ status: 'error', message: 'Email and password are required' });
         return;
@@ -30,13 +30,49 @@ export class AuthController {
     try {
       const user = req.body;
       const savedUser = await this.authService.signup(user);
-      
+
       // Eliminar password del response
       const { password, ...safeUser } = savedUser as any;
-      
+
       res.status(201).json({ status: 'success', data: safeUser });
     } catch (error: any) {
       const statusCode = error.name === 'NotFoundError' ? 404 : 400;
+      res.status(statusCode).json({ status: 'error', message: error.message });
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+      console.log({ email });
+
+      // Intentar obtener la URL del frontend dinámicamente o por env
+      const frontendUrl = process.env.FRONTEND_URL || req.get('origin') || 'http://localhost:5173';
+
+      await this.authService.sendPasswordResetEmail(email, frontendUrl);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Si el correo electrónico existe, se enviarán las instrucciones para restablecer tu contraseña.'
+      });
+    } catch (error: any) {
+      const statusCode = error.statusCode || 400;
+      res.status(statusCode).json({ status: 'error', message: error.message });
+    }
+  }
+
+  async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { token, password } = req.body;
+
+      await this.authService.resetPassword(token, password);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Tu contraseña ha sido restablecida exitosamente.'
+      });
+    } catch (error: any) {
+      const statusCode = error.statusCode || 400;
       res.status(statusCode).json({ status: 'error', message: error.message });
     }
   }

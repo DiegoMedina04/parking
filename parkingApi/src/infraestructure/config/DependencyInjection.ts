@@ -32,6 +32,8 @@ import { TypeOrmMensualidadPaymentRepositoryAdapter } from '../repositories/Type
 import { CreateUserUseCaseImpl } from '../../application/usecases/user/CreateUserUseCaseImpl';
 import { LoginUseCaseImpl } from '../../application/usecases/auth/LoginUseCaseImpl';
 import { SignupUseCaseImpl } from '../../application/usecases/auth/SignupUseCaseImpl';
+import { SendPasswordResetEmailUseCaseImpl } from '../../application/usecases/auth/SendPasswordResetEmailUseCaseImpl';
+import { ResetPasswordUseCaseImpl } from '../../application/usecases/auth/ResetPasswordUseCaseImpl';
 import { RetrieveUserUseCaseImpl } from '../../application/usecases/user/RetrieveUserUseCaseImpl';
 import { UpdateUserUseCaseImpl } from '../../application/usecases/user/UpdateUserUseCaseImpl';
 import { DeleteUserUseCaseImpl } from '../../application/usecases/user/DeleteUserUseCaseImpl';
@@ -97,6 +99,7 @@ import { CapacityService } from '../../application/services/CapacityService';
 // Security / Adapters
 import { BcryptPasswordHasherAdapter } from '../security/BcryptPasswordHasherAdapter';
 import { JwtGeneratorAdapter } from '../security/jwt/JwtGeneratorAdapter';
+import { NodemailerMailSenderAdapter } from '../security/mail/NodemailerMailSenderAdapter';
 
 // Controllers
 import { UserController } from '../controllers/UserController';
@@ -226,9 +229,12 @@ export class DependencyInjection {
 
     const loginUC = new LoginUseCaseImpl(userRepo, passwordHasher, jwtGenerator, subscriptionRepository, getCapacityUC);
     const signupUC = new SignupUseCaseImpl(userRepo, roleRepo, passwordHasher);
+    const mailSender = new NodemailerMailSenderAdapter();
+    const sendPasswordResetEmailUC = new SendPasswordResetEmailUseCaseImpl(userRepo, mailSender);
+    const resetPasswordUC = new ResetPasswordUseCaseImpl(userRepo, passwordHasher);
     
     // Servicio
-    const authService = new AuthService(loginUC, signupUC);
+    const authService = new AuthService(loginUC, signupUC, sendPasswordResetEmailUC, resetPasswordUC);
     
     return new AuthController(authService);
 

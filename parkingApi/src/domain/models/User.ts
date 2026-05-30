@@ -9,6 +9,8 @@ export class User {
         public password?: string,
         public email?: string,
         public role?: Role,
-        public parking?: Parking[]
+        public parking?: Parking[],
+        public resetPasswordToken?: string,
+        public resetPasswordExpires?: Date
     ) {}
 }

@@ -22,4 +22,14 @@ export const authService = {
     const response = await httpClient.post('/auth/signup', userData);
     return response.data;
   },
+
+  forgotPassword: async (email: string): Promise<any> => {
+    const response = await httpClient.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  resetPassword: async (token: string, passwordPlain: string): Promise<any> => {
+    const response = await httpClient.post('/auth/reset-password', { token, password: passwordPlain });
+    return response.data;
+  },
 };

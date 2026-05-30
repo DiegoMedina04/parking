@@ -28,24 +28,24 @@ export class LoginUseCaseImpl {
         private readonly jwtGenerator: JwtGeneratorPort,
         private readonly subscriptionRepository: SubscriptionRepositoryPort,
         private readonly getCapacityUseCase: GetCapacityUseCase
-    ) {}
+    ) { }
 
 
     async execute(email: string, passwordPlain: string): Promise<LoginResult | null> {
         const user = await this.userRepository.findByEmail(email);
-        
+
         if (!user || !user.password) {
-            return null; 
+            return null;
         }
 
         const isPasswordValid = await this.passwordHasher.compare(passwordPlain, user.password);
-        
+
         if (!isPasswordValid) {
             return null; // Contraseña incorrecta
         }
 
         const token = this.jwtGenerator.generateToken(user);
-        
+
         const parqueadero_id = user.parking && user.parking.length > 0 ? user.parking[0].id : undefined;
         let max_places = 0;
         let current_places = 0;
@@ -64,12 +64,14 @@ export class LoginUseCaseImpl {
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
 
-                if(subscription.startDate <= currentDate && subscription.endDate >= currentDate ){
+                if (subscription.startDate <= currentDate && subscription.endDate >= currentDate) {
                     is_subscription_active = true;
                 }
             }
         }
-        
+
+        console.log({ token });
+
         return {
             token,
             user: {

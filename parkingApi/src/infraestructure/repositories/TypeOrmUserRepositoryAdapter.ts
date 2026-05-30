@@ -27,6 +27,14 @@ export class TypeOrmUserRepositoryAdapter implements UserRepositoryPort {
     return entity ? entity.toDomainModel() : null;
   }
 
+  async findByResetToken(token: string): Promise<User | null> {
+    const entity = await this.userRepository.findOne({ 
+      where: { resetPasswordToken: token }, 
+      relations: ['role', 'parking'] 
+    });
+    return entity ? entity.toDomainModel() : null;
+  }
+
   async save(user: User): Promise<User> {
     const entity = UserEntity.fromDomainModel(user);
     const savedEntity = await this.userRepository.save(entity);

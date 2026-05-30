@@ -27,6 +27,12 @@ export class UserEntity {
   @OneToMany(() => ParkingEntity, (parking) => parking.user, { cascade: true })
   parking?: ParkingEntity[];
 
+  @Column({ name: 'reset_password_token', nullable: true })
+  resetPasswordToken?: string;
+
+  @Column({ name: 'reset_password_expires', type: 'timestamp', nullable: true })
+  resetPasswordExpires?: Date;
+
   static fromDomainModel(user: User): UserEntity {
     const entity = new UserEntity();
     entity.id = user.id;
@@ -34,6 +40,8 @@ export class UserEntity {
     entity.document = user.document;
     entity.password = user.password || '';
     entity.email = user.email || '';
+    entity.resetPasswordToken = user.resetPasswordToken;
+    entity.resetPasswordExpires = user.resetPasswordExpires;
     
     if (user.role) {
       entity.role = RoleEntity.fromDomainModel(user.role);
@@ -54,7 +62,9 @@ export class UserEntity {
       this.password,
       this.email,
       this.role?.toDomainModel(),
-      this.parking?.map(p => p.toDomainModel())
+      this.parking?.map(p => p.toDomainModel()),
+      this.resetPasswordToken,
+      this.resetPasswordExpires
     );
   }
 }

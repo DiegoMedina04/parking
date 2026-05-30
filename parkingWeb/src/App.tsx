@@ -1,5 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from './presentation/pages/auth/LoginPage';
+import { ForgotPasswordPage } from './presentation/pages/auth/ForgotPasswordPage';
+import { ResetPasswordPage } from './presentation/pages/auth/ResetPasswordPage';
 import { DashboardPage } from './presentation/pages/dashboard/DashboardPage';
 import { UnauthorizedPage } from './presentation/pages/error/UnauthorizedPage';
 import { ProtectedRoute } from './presentation/components/ProtectedRoute';
@@ -39,6 +41,22 @@ function App() {
           element={
             <PublicRoute>
               <LoginPage />
+            </PublicRoute>
+          } 
+        />
+        <Route 
+          path="/forgot-password" 
+          element={
+            <PublicRoute>
+              <ForgotPasswordPage />
+            </PublicRoute>
+          } 
+        />
+        <Route 
+          path="/reset-password" 
+          element={
+            <PublicRoute>
+              <ResetPasswordPage />
             </PublicRoute>
           } 
         />

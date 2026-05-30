@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../application/store/authStore';
 import { authService } from '../../../infrastructure/services/authService';
-import { LogIn, Lock, Mail, Loader2, Sparkles, UserPlus } from 'lucide-react';
+import { LogIn, Lock, Mail, Loader2, Sparkles, UserPlus, Eye, EyeOff } from 'lucide-react';
 import { UserFormModal } from '../../components/admin/UserFormModal';
 import { toast } from 'react-hot-toast';
 
@@ -11,6 +11,7 @@ export const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
@@ -118,18 +119,36 @@ export const LoginPage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest">Contraseña</label>
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot-password')}
+                  className="text-xs font-black text-blue-600 uppercase tracking-widest hover:underline cursor-pointer"
+                >
+                  ¿La olvidaste?
+                </button>
+              </div>
               <div className="relative group">
                 <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={20} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
                   placeholder="••••••••"
-                  className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-8 py-5 outline-none font-bold text-slate-700 shadow-sm focus:shadow-md focus:border-blue-100 transition-all placeholder:text-slate-300"
+                  className="w-full bg-white border border-slate-100 rounded-[2rem] pl-16 pr-16 py-5 outline-none font-bold text-slate-700 shadow-sm focus:shadow-md focus:border-blue-100 transition-all placeholder:text-slate-300"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 hover:text-blue-500 transition-colors cursor-pointer"
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 
